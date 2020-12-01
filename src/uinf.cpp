@@ -24,16 +24,16 @@ str uinf::tostr() const {
 
 /* ---------- constructors and assignment operators ---------- */
 
-template <typename T>
-uinf::uinf(T val) {
-	if constexpr (std::is_integral<T>::value) {
-		val = std::abs(val);
-		do {
-			value.emplace_back(val % 10);
-			val /= 10;
-		} while (val > 0);
-	} else throw "constructing an unsigned integer with an non-integral value";
-}
+// template <typename T>
+// uinf::uinf(T val) {
+// 	if constexpr (std::is_integral<T>::value) {
+// 		val = std::abs(val);
+// 		do {
+// 			value.emplace_back(val % 10);
+// 			val /= 10;
+// 		} while (val > 0);
+// 	} else throw "constructing an unsigned integer with an non-integral value";
+// }
 
 uinf::uinf(const char *s) {
 	value.insert(value.end(), s, s + strlen(s));
@@ -41,6 +41,7 @@ uinf::uinf(const char *s) {
 	auto pos = value.begin();
 	while (pos != value.end() and isdigit(*pos)) *pos++ -= '0';
 	value.erase(pos, value.end());
+	remove_leading_zero();
 }
 uinf::uinf(const str &s) {
 	value.insert(value.end(), s.begin(), s.end());
@@ -48,10 +49,11 @@ uinf::uinf(const str &s) {
 	auto pos = value.begin();
 	while (pos != value.end() and isdigit(*pos)) *pos++ -= '0';
 	value.erase(pos, value.end());
+	remove_leading_zero();
 }
 
-uinf::uinf(const Vec<i32> &rhs): value(rhs) { }
-uinf::uinf(Vec<i32> &&rhs): value(std::move(rhs)) { }
+uinf::uinf(const Vec<i32> &rhs): value(rhs) { remove_leading_zero(); }
+uinf::uinf(Vec<i32> &&rhs): value(std::move(rhs)) { remove_leading_zero(); }
 
 uinf::uinf(const uinf &rhs) { *this = rhs; }
 uinf::uinf(uinf &&rhs) noexcept { value = std::move(rhs.value); }
@@ -78,6 +80,7 @@ uinf uinf::operator + (const uinf &rhs) const {
 		if (ans[i] > 9) ans[i] -= 10, up = 1;
 		else up = 0;
 	} if (up != 0) ans.value.emplace_back(up);
+	ans.remove_leading_zero();
 	return ans;
 }
 
@@ -110,7 +113,6 @@ uinf uinf::operator * (const uinf &rhs) const {
 	return ans;
 }
 
-// bug exists
 uinf uinf::operator / (const uinf &rhs) const {
 	if (rhs.iszero()) throw std::overflow_error("in uinf::operator / : Divide By Zero");
 	uinf rem; Vec<i32> ans_vec;
@@ -135,7 +137,7 @@ uinf uinf::operator % (const uinf &rhs) const {
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		while (rem >= rhs) rem -= rhs;
-	}
+	} rem.remove_leading_zero();
 	return rem;
 }
 

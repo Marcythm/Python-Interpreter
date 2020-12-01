@@ -9,13 +9,16 @@ class uinf {
 	Vec<i32> value;
 
 	void resize(u32 new_length) { resize(new_length); }
-	void remove_leading_zero() { while (not value.empty() and value.back() == 0) value.pop_back(); }
+	void remove_leading_zero() {
+		while (not value.empty() and value.back() == 0) value.pop_back();
+		if (value.size() == 0) value.emplace_back(0);
+	}
 	i32 cmp(const uinf &rhs) const; // usage: equal to three-way comparison operator <=>
 
 public:
 	const u32 len() const { return value.size(); }
 
-	uinf() { }
+	uinf(): value(1, 0) { }
 	template <typename T> explicit uinf(T val);
 	explicit uinf(const char *s);
 	explicit uinf(const str &s);

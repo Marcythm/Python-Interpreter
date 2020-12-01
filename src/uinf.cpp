@@ -14,7 +14,7 @@ void uinf::remove_leading_zero() {
 /* ---------- public functions ----------  */
 
 const u32 uinf::len() const { return value.size(); }
-const bool uinf::iszero() const { return value.size() == 1 and value[0] == 1; }
+const bool uinf::iszero() const { return value.size() == 1 and value[0] == 0; }
 
 str uinf::tostr() const {
 	str s; s.reserve(len());

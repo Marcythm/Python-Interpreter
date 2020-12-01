@@ -99,7 +99,6 @@ uinf uinf::operator * (const uinf &rhs) const {
 	return ans;
 }
 
-
 uinf& uinf::operator += (const uinf &rhs) { return *this = *this + rhs; }
 uinf& uinf::operator -= (const uinf &rhs) { return *this = *this - rhs; }
 uinf& uinf::operator *= (const uinf &rhs) { return *this = *this * rhs; }
@@ -113,8 +112,7 @@ uinf& uinf::operator %= (const uinf &rhs) { return *this = *this % rhs; }
 i32 uinf::cmp(const uinf &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
-	const u32 l = len();
-	for (u32 i = 0; i < l; ++i)
+	for (i32 i = len() - 1; i >= 0; --i)
 		if (value[i] > rhs[i]) return -1;
 		else if (value[i] < rhs[i]) return 1;
 	return 0;

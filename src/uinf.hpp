@@ -16,6 +16,7 @@ class uinf {
 public:
 	const u32 len() const;
 	const bool iszero() const;
+	str tostr() const;
 
 	uinf(): value(1, 0) { }
 	template <typename T> explicit uinf(T val);
@@ -24,7 +25,7 @@ public:
 	explicit uinf(const str &s);
 
 	uinf(const Vec<i32> &rhs);
-	uinf(Vec<i32> &&rns);
+	uinf(Vec<i32> &&rhs);
 
 	uinf(const uinf &rhs);
 	uinf(uinf &&rhs) noexcept;

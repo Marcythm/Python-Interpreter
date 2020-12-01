@@ -3,7 +3,7 @@
 
 /* ---------- private functions ---------- */
 
-void uinf::resize(u32 new_length) { resize(new_length); }
+void uinf::resize(u32 new_length) { value.resize(new_length); }
 void uinf::remove_leading_zero() {
 	while (not value.empty() and value.back() == 0) value.pop_back();
 	if (value.size() == 0) value.emplace_back(0);
@@ -16,6 +16,12 @@ void uinf::remove_leading_zero() {
 const u32 uinf::len() const { return value.size(); }
 const bool uinf::iszero() const { return value.size() == 1 and value[0] == 1; }
 
+str uinf::tostr() const {
+	str s; s.reserve(len());
+	for (auto i = value.rbegin(); i != value.rend(); ++i)
+		s.push_back('0' + *i);
+	return s;
+}
 
 /* ---------- constructors and assignment operators ---------- */
 
@@ -87,7 +93,8 @@ uinf uinf::operator - (const uinf &rhs) const {
 }
 
 uinf uinf::operator * (const uinf &rhs) const {
-	uinf ans; ans.resize(len() + rhs.len());
+	uinf ans;
+	ans.resize(len() + rhs.len() + 1);
 	const u32 l1 = len(), l2 = rhs.len();
 	for (u32 i = 0; i < l1; ++i)
 		for (u32 j = 0; j < l2; ++j)

@@ -15,6 +15,7 @@ class uinf {
 
 public:
 	const u32 len() const;
+	const bool iszero() const;
 
 	uinf(): value(1, 0) { }
 	template <typename T> explicit uinf(T val);

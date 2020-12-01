@@ -14,6 +14,7 @@ void uinf::remove_leading_zero() {
 /* ---------- public functions ----------  */
 
 const u32 uinf::len() const { return value.size(); }
+const bool uinf::iszero() const { return value.size() == 1 and value[0] == 1; }
 
 
 /* ---------- constructors and assignment operators ---------- */
@@ -98,6 +99,34 @@ uinf uinf::operator * (const uinf &rhs) const {
 	ans.remove_leading_zero();
 	return ans;
 }
+
+uinf uinf::operator / (const uinf &rhs) const {
+	if (rhs.iszero()) throw std::overflow_error("in uinf::operator / : Divide By Zero");
+	uinf rem; Vec<i32> ans;
+
+	for (auto i = value.rbegin(); i != value.rend(); ++i) {
+		rem.value.insert(rem.value.begin(), *i);
+		i32 cur_rem = 0;
+		while (rem >= rhs) {
+			rem -= rhs;
+			++cur_rem;
+		} ans.emplace_back(cur_rem);
+	}
+
+	std::reverse(ans.begin(), ans.end());
+	return uinf(ans);
+}
+
+uinf uinf::operator % (const uinf &rhs) const {
+	if (rhs.iszero()) throw std::overflow_error("in uinf::operator % : Modulo By Zero");
+	uinf rem;
+	for (auto i = value.rbegin(); i != value.rend(); ++i) {
+		rem.value.insert(rem.value.begin(), *i);
+		while (rem >= rhs) rem -= rhs;
+	}
+	return rem;
+}
+
 
 uinf& uinf::operator += (const uinf &rhs) { return *this = *this + rhs; }
 uinf& uinf::operator -= (const uinf &rhs) { return *this = *this - rhs; }

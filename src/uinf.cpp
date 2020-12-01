@@ -85,12 +85,14 @@ uinf uinf::operator + (const uinf &rhs) const {
 uinf uinf::operator - (const uinf &rhs) const {
 	assert(*this >= rhs);
 	uinf ans(*this);
-	u32 up = 0; const u32 l = len();
+	u32 up = 0; const u32 l = rhs.len();
 	for (u32 i = 0; i < l; ++i) {
-		ans[i] -= rhs[i] + up;
-		if (ans[i] < 0) ans[i] += 10, up = 1;
-		else up = 0;
-	} ans.remove_leading_zero();
+		ans[i] -= rhs[i];
+		if (ans[i] < 0) ans[i] += 10, --ans[i + 1];
+	}
+	for (u32 i = l; i < len() and ans[i] < 0; ++i)
+		ans[i] += 10, --ans[i + 1];
+	ans.remove_leading_zero();
 	return ans;
 }
 

@@ -56,7 +56,7 @@ uinf::uinf(const str &s) {
 uinf::uinf(const Vec<i32> &rhs): value(rhs) { remove_leading_zero(); }
 uinf::uinf(Vec<i32> &&rhs): value(std::move(rhs)) { remove_leading_zero(); }
 
-uinf::uinf(const uinf &rhs) { *this = rhs; }
+uinf::uinf(const uinf &rhs) = default;
 uinf::uinf(uinf &&rhs) noexcept { value = std::move(rhs.value); }
 
 uinf& uinf::operator = (const uinf &rhs) = default;
@@ -65,8 +65,8 @@ uinf& uinf::operator = (uinf &&rhs) noexcept {
 	return *this;
 }
 
-i32& uinf::operator [] (const u32 &index) { return value[index]; }
-const i32& uinf::operator [] (const u32 &index) const { return value[index]; }
+i32& uinf::operator [] (const u32 index) { return value[index]; }
+const i32& uinf::operator [] (const u32 index) const { return value[index]; }
 
 
 /* ---------- arithmetic operators ---------- */

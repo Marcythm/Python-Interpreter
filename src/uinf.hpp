@@ -33,8 +33,8 @@ public:
 	uinf& operator = (const uinf &rhs);
 	uinf& operator = (uinf &&rhs) noexcept;
 
-	i32& operator [] (const u32 &index);
-	const i32& operator [] (const u32 &index) const;
+	i32& operator [] (const u32 index);
+	const i32& operator [] (const u32 index) const;
 
 	uinf operator + (const uinf &rhs) const;
 	uinf operator - (const uinf &rhs) const;

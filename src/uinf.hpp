@@ -18,7 +18,7 @@ public:
 	const bool iszero() const;
 	str tostr() const;
 
-	uinf(): value(1, 0) { }
+	uinf(): value() { }
 	template <typename T> explicit uinf(T val);
 
 	explicit uinf(const char *s);

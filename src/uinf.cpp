@@ -6,7 +6,6 @@
 void uinf::resize(u32 new_length) { value.resize(new_length); }
 void uinf::remove_leading_zero() {
 	while (not value.empty() and value.back() == 0) value.pop_back();
-	if (value.size() == 0) value.emplace_back(0);
 }
 
 
@@ -14,7 +13,7 @@ void uinf::remove_leading_zero() {
 /* ---------- public functions ----------  */
 
 const u32 uinf::len() const { return value.size(); }
-const bool uinf::iszero() const { return value.size() == 1 and value[0] == 0; }
+const bool uinf::iszero() const { return value.size() == 0; }
 
 str uinf::tostr() const {
 	str s; s.reserve(len());
@@ -85,7 +84,7 @@ uinf uinf::operator + (const uinf &rhs) const {
 uinf uinf::operator - (const uinf &rhs) const {
 	assert(*this >= rhs);
 	uinf ans(*this);
-	u32 up = 0; const u32 l = rhs.len();
+	const u32 l = rhs.len();
 	for (u32 i = 0; i < l; ++i) {
 		ans[i] -= rhs[i];
 		if (ans[i] < 0) ans[i] += 10, --ans[i + 1];
@@ -111,9 +110,10 @@ uinf uinf::operator * (const uinf &rhs) const {
 	return ans;
 }
 
+// bug exists
 uinf uinf::operator / (const uinf &rhs) const {
 	if (rhs.iszero()) throw std::overflow_error("in uinf::operator / : Divide By Zero");
-	uinf rem; Vec<i32> ans;
+	uinf rem; Vec<i32> ans_vec;
 
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
@@ -121,12 +121,12 @@ uinf uinf::operator / (const uinf &rhs) const {
 		while (rem >= rhs) {
 			rem -= rhs;
 			++cur_rem;
-			printf("cur_rem = %d, rem = %s\n", cur_rem, rem.tostr().c_str());
-		} ans.emplace_back(cur_rem);
+		} ans_vec.emplace_back(cur_rem);
 	}
 
-	std::reverse(ans.begin(), ans.end());
-	return uinf(ans);
+	std::reverse(ans_vec.begin(), ans_vec.end());
+	uinf ans(ans_vec); ans.remove_leading_zero();
+	return ans;
 }
 
 uinf uinf::operator % (const uinf &rhs) const {

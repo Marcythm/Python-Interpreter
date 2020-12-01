@@ -33,3 +33,24 @@ u& u::operator = (u &&rhs) noexcept {
 
 i32& u::operator [] (const u32 &index) { return value[index]; }
 const i32& u::operator [] (const u32 &index) const { return value[index]; }
+
+
+// ---------- comparion operators ----------
+
+// usgae: equal to three-way comparison operator <=>
+i32 u::cmp(const u &rhs) const {
+	if (len() > rhs.len()) return 1;
+	if (len() < rhs.len()) return -1;
+	const u32 l = len();
+	for (u32 i = 0; i < l; ++i)
+		if (value[i] > rhs[i]) return -1;
+		else if (value[i] < rhs[i]) return 1;
+	return 0;
+}
+
+bool u::operator == (const u &rhs) const { return cmp(rhs) == 0;}
+bool u::operator != (const u &rhs) const { return cmp(rhs) != 0; }
+bool u::operator < (const u &rhs) const { return cmp(rhs) < 0; }
+bool u::operator > (const u &rhs) const { return cmp(rhs) > 0; }
+bool u::operator <= (const u &rhs) const { return cmp(rhs) <= 0; }
+bool u::operator >= (const u &rhs) const { return cmp(rhs) >= 0; }

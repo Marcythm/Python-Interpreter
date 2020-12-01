@@ -16,6 +16,7 @@ const u32 uinf::len() const { return value.size(); }
 const bool uinf::iszero() const { return value.size() == 0; }
 
 str uinf::tostr() const {
+	if (iszero()) return str();
 	str s; s.reserve(len());
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
 		s.push_back('0' + *i);

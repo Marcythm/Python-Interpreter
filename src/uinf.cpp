@@ -38,12 +38,14 @@ uinf::uinf(T val) {
 
 uinf::uinf(const char *s) {
 	value.insert(value.end(), s, s + strlen(s));
+	std::reverse(value.begin(), value.end());
 	auto pos = value.begin();
 	while (pos != value.end() and isdigit(*pos)) *pos++ -= '0';
 	value.erase(pos, value.end());
 }
 uinf::uinf(const str &s) {
 	value.insert(value.end(), s.begin(), s.end());
+	std::reverse(value.begin(), value.end());
 	auto pos = value.begin();
 	while (pos != value.end() and isdigit(*pos)) *pos++ -= '0';
 	value.erase(pos, value.end());

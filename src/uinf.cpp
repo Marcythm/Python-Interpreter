@@ -119,6 +119,7 @@ uinf uinf::operator / (const uinf &rhs) const {
 		while (rem >= rhs) {
 			rem -= rhs;
 			++cur_rem;
+			printf("cur_rem = %d, rem = %s\n", cur_rem, rem.tostr().c_str());
 		} ans.emplace_back(cur_rem);
 	}
 
@@ -151,8 +152,8 @@ i32 uinf::cmp(const uinf &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
 	for (i32 i = len() - 1; i >= 0; --i)
-		if (value[i] > rhs[i]) return -1;
-		else if (value[i] < rhs[i]) return 1;
+		if (value[i] > rhs[i]) return 1;
+		else if (value[i] < rhs[i]) return -1;
 	return 0;
 }
 

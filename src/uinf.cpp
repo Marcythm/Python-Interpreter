@@ -73,19 +73,21 @@ const i32& uinf::operator [] (const u32 &index) const { return value[index]; }
 uinf uinf::operator + (const uinf &rhs) const {
 	if (len() > rhs.len()) return rhs + *this;
 	/* assume that len() <= rhs.len(); */
-	uinf ans(rhs);
-	u32 up = 0; const u32 l = ans.len();
+	uinf ans(rhs); ans.resize(ans.len() + 1);
+	const u32 l = len();
 	for (u32 i = 0; i < l; ++i) {
-		ans[i] += value[i] + up;
-		if (ans[i] > 9) ans[i] -= 10, up = 1;
-		else up = 0;
-	} if (up != 0) ans.value.emplace_back(up);
+		ans[i] += value[i];
+		if (ans[i] > 9) ans[i] -= 10, ++ans[i + 1];
+	}
+	for (u32 i = l; i < ans.len() and ans[i] > 9; ++i)
+		ans[i] -= 10, ++ans[i + 1];
 	ans.remove_leading_zero();
 	return ans;
 }
 
 uinf uinf::operator - (const uinf &rhs) const {
 	assert(*this >= rhs);
+	/* assume that the result is non-negative */
 	uinf ans(*this);
 	const u32 l = rhs.len();
 	for (u32 i = 0; i < l; ++i) {

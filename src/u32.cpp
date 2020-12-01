@@ -37,7 +37,7 @@ const i32& u::operator [] (const u32 &index) const { return value[index]; }
 
 // ---------- comparison operators ----------
 
-// usgae: equal to three-way comparison operator <=>
+// usage: equal to three-way comparison operator <=>
 i32 u::cmp(const u &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;

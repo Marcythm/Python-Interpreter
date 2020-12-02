@@ -12,11 +12,11 @@ void uinf::remove_leading_zero() {
 
 /* ---------- public functions ----------  */
 
-const u32 uinf::len() const { return value.size(); }
-const bool uinf::iszero() const { return value.size() == 0; }
+u32 uinf::len() const { return value.size(); }
+bool uinf::iszero() const { return value.size() == 0; }
 
 str uinf::tostr() const {
-	if (iszero()) return str();
+	if (iszero()) return str("0");
 	str s; s.reserve(len());
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
 		s.push_back('0' + *i);
@@ -35,6 +35,8 @@ str uinf::tostr() const {
 // 		} while (val > 0);
 // 	} else throw "constructing an unsigned integer with an non-integral value";
 // }
+
+uinf::uinf(): value() {}
 
 uinf::uinf(const char *s) {
 	value.insert(value.end(), s, s + strlen(s));
@@ -75,13 +77,12 @@ uinf uinf::operator + (const uinf &rhs) const {
 	if (len() > rhs.len()) return rhs + *this;
 	/* assume that len() <= rhs.len(); */
 	uinf ans(rhs); ans.resize(ans.len() + 1);
-	const u32 l = len();
-	for (u32 i = 0; i < l; ++i) {
-		ans[i] += value[i];
-		if (ans[i] > 9) ans[i] -= 10, ++ans[i + 1];
-	}
-	for (u32 i = l; i < ans.len() and ans[i] > 9; ++i)
+	for (u32 i = 0; i < len(); ++i)
+		if (ans[i] += value[i]; ans[i] > 9)
+			ans[i] -= 10, ++ans[i + 1];
+	for (u32 i = len(); i < ans.len() and ans[i] > 9; ++i)
 		ans[i] -= 10, ++ans[i + 1];
+
 	ans.remove_leading_zero();
 	return ans;
 }
@@ -90,36 +91,34 @@ uinf uinf::operator - (const uinf &rhs) const {
 	assert(*this >= rhs);
 	/* assume that the result is non-negative */
 	uinf ans(*this);
-	const u32 l = rhs.len();
-	for (u32 i = 0; i < l; ++i) {
-		ans[i] -= rhs[i];
-		if (ans[i] < 0) ans[i] += 10, --ans[i + 1];
-	}
-	for (u32 i = l; i < len() and ans[i] < 0; ++i)
+	for (u32 i = 0; i < rhs.len(); ++i)
+		if (ans[i] -= rhs[i]; ans[i] < 0)
+			ans[i] += 10, --ans[i + 1];
+	for (u32 i = rhs.len(); i < len() and ans[i] < 0; ++i)
 		ans[i] += 10, --ans[i + 1];
+
 	ans.remove_leading_zero();
 	return ans;
 }
 
 uinf uinf::operator * (const uinf &rhs) const {
-	uinf ans;
-	ans.resize(len() + rhs.len() + 1);
-	const u32 l1 = len(), l2 = rhs.len();
-	for (u32 i = 0; i < l1; ++i)
-		for (u32 j = 0; j < l2; ++j)
+	uinf ans; ans.resize(len() + rhs.len() + 1);
+	for (u32 i = 0; i < len(); ++i)
+		for (u32 j = 0; j < rhs.len(); ++j)
 			ans[i + j] += value[i] * rhs[j];
-	for (u32 i = 0; i < l1 + l2; ++i)
-		if (ans[i] > 9)
-			ans[i + 1] += ans[i] / 10,
-			ans[i] %= 10;
+	for (u32 i = 1; i < ans.len(); ++i)
+		if (ans[i - 1] > 9)
+			ans[i] += ans[i - 1] / 10,
+			ans[i - 1] %= 10;
+
 	ans.remove_leading_zero();
 	return ans;
 }
 
 uinf uinf::operator / (const uinf &rhs) const {
-	if (rhs.iszero()) throw std::overflow_error("in uinf::operator / : Divide By Zero");
-	uinf rem; Vec<i32> ans_vec;
+	if (rhs.iszero()) throw std::domain_error("in uinf::operator / : Divide By Zero");
 
+	uinf rem; Vec<i32> ans_vec;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		i32 cur_rem = 0;
@@ -135,12 +134,15 @@ uinf uinf::operator / (const uinf &rhs) const {
 }
 
 uinf uinf::operator % (const uinf &rhs) const {
-	if (rhs.iszero()) throw std::overflow_error("in uinf::operator % : Modulo By Zero");
+	if (rhs.iszero()) throw std::domain_error("in uinf::operator % : Modulo By Zero");
+
 	uinf rem;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		while (rem >= rhs) rem -= rhs;
-	} rem.remove_leading_zero();
+	}
+
+	rem.remove_leading_zero();
 	return rem;
 }
 

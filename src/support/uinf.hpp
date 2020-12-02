@@ -11,14 +11,14 @@ class uinf {
 
 	void resize(u32 new_length);
 	void remove_leading_zero();
-	i32 cmp(const uinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
 
 public:
-	const u32 len() const;
-	const bool iszero() const;
+	u32 len() const;
 	str tostr() const;
 
-	uinf(): value() { }
+	bool iszero() const;
+
+	uinf();
 	template <typename T> explicit uinf(T val);
 
 	explicit uinf(const char *s);
@@ -48,12 +48,15 @@ public:
 	uinf& operator /= (const uinf &rhs);
 	uinf& operator %= (const uinf &rhs);
 
+	i32 cmp(const uinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
 	bool operator == (const uinf &rhs) const;
 	bool operator != (const uinf &rhs) const;
 	bool operator < (const uinf &rhs) const;
 	bool operator > (const uinf &rhs) const;
 	bool operator <= (const uinf &rhs) const;
 	bool operator >= (const uinf &rhs) const;
+
+	friend class iinf;
 };
 
 #endif

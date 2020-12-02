@@ -26,4 +26,7 @@ using str = std::string;
 
 template <typename T> using Vec = std::vector<T>;
 
+class uinf;
+class iinf;
+
 #endif

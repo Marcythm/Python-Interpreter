@@ -25,16 +25,16 @@ str uinf::tostr() const {
 
 /* ---------- constructors and assignment operators ---------- */
 
-// template <typename T>
-// uinf::uinf(T val) {
-// 	if constexpr (std::is_integral<T>::value) {
-// 		val = std::abs(val);
-// 		do {
-// 			value.emplace_back(val % 10);
-// 			val /= 10;
-// 		} while (val > 0);
-// 	} else throw "constructing an unsigned integer with an non-integral value";
-// }
+template <typename T>
+uinf::uinf(T val) {
+	// if constexpr (std::is_integral<T>::value) {
+		val = std::abs(val);
+		do {
+			value.emplace_back(val % 10);
+			val /= 10;
+		} while (val > 0);
+	// } else throw "constructing an unsigned integer with an non-integral value";
+}
 
 uinf::uinf(): value() {}
 

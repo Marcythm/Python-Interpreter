@@ -1,5 +1,5 @@
-#ifndef Python_Interpreter_unsigned_integer
-#define Python_Interpreter_unsigned_integer
+#ifndef Python_Interpreter_Support_unsigned_integer
+#define Python_Interpreter_Support_unsigned_integer
 
 #include "claim.hpp"
 

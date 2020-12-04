@@ -1,5 +1,5 @@
-#ifndef Python_Interpreter_signed_integer
-#define Python_Interpreter_signed_integer
+#ifndef Python_Interpreter_Support_signed_integer
+#define Python_Interpreter_Support_signed_integer
 
 #include "uinf.hpp"
 

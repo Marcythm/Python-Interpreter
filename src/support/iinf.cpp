@@ -19,16 +19,8 @@ str iinf::tostr() const {
 
 /* ---------- constructors and assignment operators ---------- */
 
-// template <typename T>
-// iinf::iinf(T val) {
-// 	if constexpr (std::is_integral<T>::value) {
-// 		val = std::abs(val);
-// 		do {
-// 			value.emplace_back(val % 10);
-// 			val /= 10;
-// 		} while (val > 0);
-// 	} else throw "constructing an unsigned integer with an non-integral value";
-// }
+template <typename T>
+iinf::iinf(T val): sign((val < 0) ? -1 : (val == 0 ? 0 : 1)) value(std::abs(val)) {}
 
 iinf::iinf(): sign(0), value() {}
 
@@ -77,7 +69,7 @@ iinf iinf::operator / (const iinf &rhs) const {
 	if (iszero()) return iinf();
 	if (sign == rhs.sign) return iinf(value / rhs.value, POS);
 	if ((value % rhs.value).iszero()) return iinf(value / rhs.value, NEG);
-	return iinf(value / rhs.value + uinf("1"), NEG);
+	return iinf(value / rhs.value + uinf(1), NEG);
 }
 
 /* a lazy implementation */

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "../../src/uinf.hpp"
+#include "../../src/support/uinf.hpp"
 
 str a, b;
 

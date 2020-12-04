@@ -29,4 +29,13 @@ template <typename T> using Vec = std::vector<T>;
 class uinf;
 class iinf;
 
+
+class ObjectNone;
+class ObjectInt;
+class ObjectFloat;
+class ObjectStr;
+class ObjectBool;
+class Object;
+
+
 #endif

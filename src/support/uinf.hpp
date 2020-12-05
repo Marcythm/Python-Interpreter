@@ -14,9 +14,8 @@ class uinf {
 
 public:
 	u32 len() const;
-	str tostr() const;
-
 	bool iszero() const;
+	template <typename T> T to() const;
 
 	uinf();
 	// template <typename T> uinf(T val);

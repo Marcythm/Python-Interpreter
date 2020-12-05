@@ -7,25 +7,37 @@ class ObjectFloat: public ObjectNone {
 	f64 value;
 
 public:
+	/* constructors */
 	ObjectFloat();
 
-	explicit ObjectFloat(const iinf &val);
-	explicit ObjectFloat(const str &s);
-	explicit ObjectFloat(const char *&&s);
-	explicit ObjectFloat(bool val);
-	explicit ObjectFloat(f64 val);
+	explicit ObjectFloat(const iinf &);
+	explicit ObjectFloat(const str &);
+	explicit ObjectFloat(const char *&&);
+	explicit ObjectFloat(bool);
+	explicit ObjectFloat(f64);
 
+	/* destructor */
 	~ObjectFloat();
 
-	inline bool isFloat() const { return true; };
+	// inline bool isFloat() const { return true; };
 
-	inline ObjectInt asInt() const { return ObjectInt(value); }
-	inline ObjectStr asStr() const { return ObjectStr(value); }
-	inline ObjectBool asBool() const { return ObjectBool(value); }
-	inline ObjectFloat asFloat() const { return *this; }
+	ObjectInt asInt() const;
+	ObjectStr asStr() const;
+	ObjectBool asBool() const;
+	ObjectFloat asFloat() const;
 
-	inline operator f64& () { return value; }
-	inline operator const f64& () const { return value; }
+	inline operator f64& () { return value; };
+	inline operator const f64& () const { return value; };
+
+	/* comparison operators */
+	template <typename T> i32 cmp(const T &) const;
+	template <typename T> inline bool operator == (const T &rhs) const { return cmp(rhs) == 0; };
+	template <typename T> inline bool operator != (const T &rhs) const { return cmp(rhs) != 0; };
+	template <typename T> inline bool operator < (const T &rhs) const { return cmp(rhs) < 0; };
+	template <typename T> inline bool operator > (const T &rhs) const { return cmp(rhs) > 0; };
+	template <typename T> inline bool operator <= (const T &rhs) const { return cmp(rhs) <= 0; };
+	template <typename T> inline bool operator >= (const T &rhs) const { return cmp(rhs) >= 0; };
+
 };
 
 #endif

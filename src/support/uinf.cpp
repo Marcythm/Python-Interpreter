@@ -15,13 +15,38 @@ void uinf::remove_leading_zero() {
 u32 uinf::len() const { return value.size(); }
 bool uinf::iszero() const { return value.size() == 0; }
 
-str uinf::tostr() const {
+template <>
+bool uinf::to<bool>() const { return value.size() != 0; }
+
+template <>
+str uinf::to<str>() const {
 	if (iszero()) return str("0");
 	str s; s.reserve(len());
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
 		s.push_back('0' + *i);
 	return s;
 }
+
+template <>
+u32 uinf::to<u32>() const {
+	if (value.size() > 9) throw std::bad_cast();
+	u32 val = 0;
+	for (auto i = value.rbegin(); i != value.rend(); ++i)
+		val = val * 10 + *i;
+	return val;
+}
+
+template <>
+u64 uinf::to<u64>() const {
+	if (value.size() > 18) throw std::bad_cast();
+	u64 val = 0;
+	for (auto i = value.rbegin(); i != value.rend(); ++i)
+		val = val * 10 + *i;
+	return val;
+}
+
+template <>
+f64 uinf::to<f64>() const { return std::stod(to<str>()); }
 
 /* ---------- constructors and assignment operators ---------- */
 

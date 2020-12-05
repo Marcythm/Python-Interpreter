@@ -7,26 +7,38 @@ class ObjectStr: public ObjectNone {
 	str value;
 
 public:
+	/* constructors */
 	ObjectStr();
-	explicit ObjectStr(str &&s);
+	explicit ObjectStr(str &&);
 
-	explicit ObjectStr(const iinf &val);
-	explicit ObjectStr(const str &s);
-	explicit ObjectStr(const char *&&s);
-	explicit ObjectStr(bool val);
-	explicit ObjectStr(f64 val);
+	explicit ObjectStr(const iinf &);
+	explicit ObjectStr(const str &);
+	explicit ObjectStr(const char *&&);
+	explicit ObjectStr(bool);
+	explicit ObjectStr(f64);
 
+	/* destructor */
 	~ObjectStr();
 
-	inline bool isStr() const { return true; };
+	// inline bool isStr() const { return true; };
 
-	inline ObjectInt asInt() const { return ObjectInt(value); }
-	inline ObjectStr asStr() const { return *this; }
-	inline ObjectBool asBool() const { return ObjectBool(value); }
-	inline ObjectFloat asFloat() const { return ObjectFloat(value); }
+	ObjectInt asInt() const;
+	ObjectStr asStr() const;
+	ObjectBool asBool() const;
+	ObjectFloat asFloat() const;
 
-	inline operator str& () { return value; }
-	inline operator const str& () const { return value; }
+	inline operator str& () { return value; };
+	inline operator const str& () const { return value; };
+
+	/* comparison operators */
+	template <typename T> i32 cmp(const T &) const;
+	template <typename T> inline bool operator == (const T &rhs) const { return cmp(rhs) == 0; };
+	template <typename T> inline bool operator != (const T &rhs) const { return cmp(rhs) != 0; };
+	template <typename T> inline bool operator < (const T &rhs) const { return cmp(rhs) < 0; };
+	template <typename T> inline bool operator > (const T &rhs) const { return cmp(rhs) > 0; };
+	template <typename T> inline bool operator <= (const T &rhs) const { return cmp(rhs) <= 0; };
+	template <typename T> inline bool operator >= (const T &rhs) const { return cmp(rhs) >= 0; };
+
 };
 
 #endif

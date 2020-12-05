@@ -4,7 +4,9 @@
 #include <vector>
 #include <string>
 
+#include <exception>
 #include <type_traits>
+#include <compare>
 
 #include <cassert>
 #include <cstring>

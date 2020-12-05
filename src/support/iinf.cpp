@@ -12,10 +12,20 @@ bool iinf::isnegative() const { return sign == NEG; }
 bool iinf::iszero() const { return sign == ZERO; }
 bool iinf::ispositive() const { return sign == POS; }
 
-str iinf::tostr() const {
-	if (isnegative()) return "-" + value.tostr();
-	return value.tostr();
-}
+template <>
+bool iinf::to<bool>() const { return sign != 0; }
+
+template <>
+str iinf::to<str>() const { return (isnegative() ? "-" : "") + value.to<str>(); }
+
+template <>
+i32 iinf::to<i32>() const { return sign * static_cast<i32>(value.to<u32>()); }
+
+template <>
+i64 iinf::to<i64>() const { return sign * static_cast<i64>(value.to<u64>()); }
+
+template <>
+f64 iinf::to<f64>() const { return sign * value.to<f64>(); }
 
 /* ---------- constructors and assignment operators ---------- */
 

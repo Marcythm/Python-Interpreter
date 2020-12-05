@@ -14,9 +14,8 @@ static constexpr i8 POS = 1;
 	void detect_sign();
 
 public:
-
 	u32 len() const;
-	str tostr() const;
+	template <typename T> T to() const;
 
 	bool isnegative() const;
 	bool iszero() const;

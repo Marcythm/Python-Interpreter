@@ -19,7 +19,9 @@ public:
 	bool iszero() const;
 
 	uinf();
-	template <typename T> explicit uinf(T val);
+	// template <typename T> uinf(T val);
+	uinf(i32);
+	uinf(i64);
 
 	explicit uinf(const char *s);
 	explicit uinf(const str &s);

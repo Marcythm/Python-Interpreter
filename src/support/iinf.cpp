@@ -19,8 +19,9 @@ str iinf::tostr() const {
 
 /* ---------- constructors and assignment operators ---------- */
 
-template <typename T>
-iinf::iinf(T val): sign((val < 0) ? -1 : (val == 0 ? 0 : 1)) value(std::abs(val)) {}
+// template <typename T>
+iinf::iinf(i32 val): sign((val < 0) ? -1 : (val == 0 ? 0 : 1)), value(std::abs(val)) {}
+iinf::iinf(i64 val): sign((val < 0) ? -1 : (val == 0 ? 0 : 1)), value(std::abs(val)) {}
 
 iinf::iinf(): sign(0), value() {}
 

@@ -23,7 +23,9 @@ public:
 	bool ispositive() const;
 
 	iinf();
-	template <typename T> explicit iinf(T val);
+	// template <typename T> iinf(T val);
+	iinf(i32);
+	iinf(i64);
 
 	explicit iinf(const char *s);
 	explicit iinf(const str &s);

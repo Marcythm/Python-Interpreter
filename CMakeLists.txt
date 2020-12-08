@@ -7,6 +7,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/third_party/
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/
         ${PROJECT_SOURCE_DIR}/src/
+        ${PROJECT_SOURCE_DIR}/src/support/
 )
 set(src_dir
         ${PROJECT_SOURCE_DIR}/generated/Python3Lexer.cpp
@@ -24,6 +25,7 @@ file(GLOB antlr4-cpp-src
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/tree/*.cpp
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/tree/pattern/*.cpp
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/tree/xpath/*.cpp
+        ${PROJECT_SOURCE_DIR}/src/support/*.cpp
         )
 add_library(antlr4-cpp-runtime ${antlr4-cpp-src})
 add_executable(python_interpreter ${src_dir} src/main.cpp)

@@ -8,6 +8,7 @@
 #include "ObjectFloat.hpp"
 
 class Object {
+public:
 static const ObjectNone None;
 
 private:

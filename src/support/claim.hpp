@@ -1,8 +1,11 @@
+#pragma once
+
 #ifndef Python_Interpreter_claim
 #define Python_Interpreter_claim
 
 #include <vector>
 #include <string>
+#include <stack>
 #include <map>
 
 #include <exception>
@@ -25,9 +28,13 @@ using u64 = uint64_t;
 using f64 = double;
 using f128 = long double;
 
+template <typename T> using ptr = T*;
+
+using str = std::string;
+template <typename T> using Vec = std::vector<T>;
+
 using str = std::string;
 
-template <typename T> using Vec = std::vector<T>;
 
 class uinf;
 class iinf;

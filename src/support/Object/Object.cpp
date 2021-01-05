@@ -10,29 +10,46 @@ const None Object::NONE;
 None *const Object::noneptr(const_cast<None*>(&NONE));
 
 /* ---------- construtors ---------- */
-
 Object::Object(): ptr(noneptr) {}
-Object::Object(const Object &rhs): Object() {
+Object::Object(Object &&rhs): ptr(rhs.ptr) { rhs.ptr = nullptr; }
+Object::Object(const Object &rhs): ptr(noneptr) {
 	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
 	else if (auto p = rhs.as_type<Str>()) 			ptr = new Str(*p);
 	else if (auto p = rhs.as_type<Bool>()) 			ptr = new Bool(*p);
 	else if (auto p = rhs.as_type<Float>()) 		ptr = new Float(*p);
 }
-Object::Object(Object &&rhs): ptr(rhs.ptr) { rhs.ptr = nullptr; }
 
-Object::Object(i32 rhs): ptr(new Int(iinf(rhs))) {}
-Object::Object(const iinf &rhs): ptr(new Int(rhs)) {}
-Object::Object(const str &rhs): ptr(new Str(rhs)) {}
-Object::Object(const char *rhs): ptr(new Str(rhs)) {}
-Object::Object(bool rhs): ptr(new Bool(rhs)) {}
-Object::Object(f64 rhs): ptr(new Float(rhs)) {}
+template <typename T>
+Object::Object(T &&rhs) {
+	if constexpr (innerTypes::in_typeset_v<T>)
+		ptr = new innerTypes::Value<T>(std::move(rhs));
+	else if constexpr (innerTypes::is_storage_v<T>)
+		ptr = new T(std::move(rhs));
+	throw std::invalid_argument("Unsupported type in Object()");
+}
+template <typename T>
+Object::Object(const T &rhs) {
+	if constexpr (innerTypes::in_typeset_v<T>)
+		ptr = new innerTypes::Value<T>(rhs);
+	else if constexpr (innerTypes::is_storage_v<T>)
+		ptr = new T(rhs);
+	throw std::invalid_argument("Unsupported type in Object()");
+}
 
 /* ---------- destructor ---------- */
 Object::~Object() { if (ptr != noneptr) delete ptr; }
 
 
+/* ---------- method: as ---------- */
+template <typename T> T Object::as() const {
+	if (auto p = as_type<Int>())					return p->as<T>();
+	if (auto p = as_type<Str>()) 					return p->as<T>();
+	if (auto p = as_type<Bool>()) 					return p->as<T>();
+	if (auto p = as_type<Float>()) 					return p->as<T>();
+													return ptr->as<T>();
+}
 
-/* ---------- comparison operators ---------- */
+/* ---------- method: compare ---------- */
 i8 Object::compare(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
@@ -49,10 +66,10 @@ i8 Object::compare(const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
 		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in method compare()");
 }
 
-/* ---------- assignment operators ---------- */
+/* ---------- operator: = ---------- */
 
 Object& Object::operator = (const Object &rhs) {
 	this->~Object();
@@ -69,13 +86,15 @@ Object& Object::operator = (Object &&rhs) {
 	return *this;
 }
 
+/* ---------- operator: -(pre) ---------- */
 Object Object::operator - () const {
 	if (auto p = as_type<Float>())					return Object(-p->data());
 	if (auto p = as_type<Int>())					return Object(-p->data());
 	if (auto p = as_type<Bool>())					return Object(p->data() ? -1 : 0);
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator -(pre)");
 }
 
+/* ---------- operator: + ---------- */
 Object Object::operator + (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
@@ -92,9 +111,10 @@ Object Object::operator + (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator +");
 }
 
+/* ---------- operator: - ---------- */
 Object Object::operator - (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
@@ -109,9 +129,10 @@ Object Object::operator - (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator -");
 }
 
+/* ---------- operator: * ---------- */
 Object Object::operator * (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
@@ -131,9 +152,10 @@ Object Object::operator * (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator *");
 }
 
+/* ---------- operator: / ---------- */
 Object Object::operator / (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
@@ -142,9 +164,10 @@ Object Object::operator / (const Object &rhs) const {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator //");
 }
 
+/* ---------- method: div ---------- */
 Object Object::div(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
@@ -159,9 +182,10 @@ Object Object::div(const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
 		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator /");
 }
 
+/* ---------- operator: % ---------- */
 Object Object::operator % (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
@@ -170,5 +194,5 @@ Object Object::operator % (const Object &rhs) const {
 		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->operator%(*q);
 	}
-	throw std::invalid_argument("");
+	throw std::invalid_argument("Unsupported type in operator %");
 }

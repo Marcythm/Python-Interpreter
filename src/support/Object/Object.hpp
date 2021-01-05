@@ -1,11 +1,7 @@
 #ifndef Python_Interpreter_Support_Object
 #define Python_Interpreter_Support_Object
 
-#include "None.hpp"
-#include "Int.hpp"
-#include "Str.hpp"
-#include "Bool.hpp"
-#include "Float.hpp"
+#include "Value.hpp"
 
 using innerTypes::None;
 using innerTypes::Int;
@@ -23,36 +19,28 @@ private:
 
 public:
 	Object();
-	Object(const Object &);
 	Object(Object &&);
+	Object(const Object &);
 
-	Object(i32);
-	Object(const iinf &);
-	Object(const str &);
-	Object(const char *);
-	Object(bool);
-	Object(f64);
+	template <typename T> Object(T &&);
+	template <typename T> Object(const T &);
 
 	~Object();
 
-	template <typename T>
-	inline bool is_type() const { return as_type<T>() != nullptr; }
+	// template <typename T>
+	// inline bool is_type() const { return as_type<T>() != nullptr; }
 
 	template <typename T>
 	inline T* as_type() const { return dynamic_cast<T*>(ptr); }
 
-	inline Int asInt() const { return ptr->as<Int>(); };
-	inline Str asStr() const { return ptr->as<Str>(); };
-	inline Bool asBool() const { return ptr->as<Bool>(); };
-	inline Float asFloat() const { return ptr->as<Float>(); };
-
+	template <typename T> T as() const;
 
 	/* comparison operators */
 	i8 compare(const Object &) const;
 	inline bool operator == (const Object &rhs) const { return compare(rhs) == 0; };
 	inline bool operator != (const Object &rhs) const { return compare(rhs) != 0; };
-	inline bool operator < (const Object &rhs) const { return compare(rhs) < 0; };
-	inline bool operator > (const Object &rhs) const { return compare(rhs) > 0; };
+	inline bool operator <  (const Object &rhs) const { return compare(rhs) <  0; };
+	inline bool operator >  (const Object &rhs) const { return compare(rhs) >  0; };
 	inline bool operator <= (const Object &rhs) const { return compare(rhs) <= 0; };
 	inline bool operator >= (const Object &rhs) const { return compare(rhs) >= 0; };
 
@@ -63,19 +51,19 @@ public:
 	inline bool operator not () const { return not ptr->as<Bool>().data(); }
 	Object operator - () const;
 
-	Object operator + (const Object &) const;
-	Object operator - (const Object &) const;
-	Object operator * (const Object &) const;
-	Object operator / (const Object &) const;
-	Object div(const Object &) const;
-	Object operator % (const Object &) const;
+	Object operator +	(const Object &) const;
+	Object operator -	(const Object &) const;
+	Object operator *	(const Object &) const;
+	Object operator /	(const Object &) const;
+	Object div			(const Object &) const;
+	Object operator %	(const Object &) const;
 
-	inline Object operator += (const Object &rhs) {return *this = *this + rhs; };
-	inline Object operator -= (const Object &rhs) {return *this = *this - rhs; };
-	inline Object operator *= (const Object &rhs) {return *this = *this * rhs; };
-	inline Object operator /= (const Object &rhs) {return *this = *this / rhs; };
-	inline Object& div_eq(const Object &rhs) { return *this = this->div(rhs);};
-	inline Object operator %= (const Object &rhs) {return *this = *this % rhs; };
+	inline Object& operator +=	(const Object &rhs) { return *this = *this + rhs; };
+	inline Object& operator -=	(const Object &rhs) { return *this = *this - rhs; };
+	inline Object& operator *=	(const Object &rhs) { return *this = *this * rhs; };
+	inline Object& operator /=	(const Object &rhs) { return *this = *this / rhs; };
+	inline Object& diveq		(const Object &rhs) { return *this = this->div(rhs); };
+	inline Object& operator %=	(const Object &rhs) { return *this = *this % rhs; };
 };
 
 #endif

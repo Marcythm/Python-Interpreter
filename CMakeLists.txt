@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(python_interpreter)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -g")
 include_directories(
         ${PROJECT_SOURCE_DIR}/generated/
@@ -8,6 +8,8 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/
         ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/src/support/
+        ${PROJECT_SOURCE_DIR}/src/support/BigInt/
+        ${PROJECT_SOURCE_DIR}/src/support/Object/
 )
 set(src_dir
         ${PROJECT_SOURCE_DIR}/generated/Python3Lexer.cpp
@@ -26,6 +28,8 @@ file(GLOB antlr4-cpp-src
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/tree/pattern/*.cpp
         ${PROJECT_SOURCE_DIR}/third_party/runtime/src/tree/xpath/*.cpp
         ${PROJECT_SOURCE_DIR}/src/support/*.cpp
+        ${PROJECT_SOURCE_DIR}/src/support/BigInt/*.cpp
+        ${PROJECT_SOURCE_DIR}/src/support/Object/*.cpp
         )
 add_library(antlr4-cpp-runtime ${antlr4-cpp-src})
 add_executable(python_interpreter ${src_dir} src/main.cpp)

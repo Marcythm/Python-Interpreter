@@ -15,11 +15,15 @@ Int::Int(f64 val): value(i64(val)) {}
 /* ---------- destructor ---------- */
 Int::~Int() = default;
 
+template <> Int Int::as<Int>() const { return *this; }
+template <> Str Int::as<Str>() const { return Str(value); }
+template <> Bool Int::as<Bool>() const { return Bool(value); }
+template <> Float Int::as<Float>() const { return Float(value); }
 
-Int Int::asInt() const { return *this; }
-Str Int::asStr() const { return Str(value); }
-Bool Int::asBool() const { return Bool(value); }
-Float Int::asFloat() const { return Float(value); }
+template <> Int Int::as<Int>() const { return *this; }
+template <> Str Int::as<Str>() const { return Str(value); }
+template <> Bool Int::as<Bool>() const { return Bool(value); }
+template <> Float Int::as<Float>() const { return Float(value); }
 
 
 /* ---------- comparison operators ---------- */
@@ -32,5 +36,7 @@ template <typename T> i8 Int::compare(const T &rhs) const {
 		str("TypeError: comparison not supported between instances of 'int' and ") + typeid(T).name()
 	);
 }
+
+
 
 }

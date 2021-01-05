@@ -9,15 +9,7 @@ struct None {
 	None();
 	virtual ~None();
 
-	// virtual inline bool isInt() const { return false; };
-	// virtual inline bool isStr() const { return false; };
-	// virtual inline bool isBool() const { return false; };
-	// virtual inline bool isFloat() const { return false; };
-
-	virtual Int asInt() const;
-	virtual Str asStr() const;
-	virtual Bool asBool() const;
-	virtual Float asFloat() const;
+	template <typename T> T as() const;
 };
 
 }

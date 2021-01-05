@@ -26,6 +26,7 @@ public:
 	Object(const Object &);
 	Object(Object &&);
 
+	Object(i32);
 	Object(const iinf &);
 	Object(const str &);
 	Object(const char *);
@@ -40,10 +41,10 @@ public:
 	template <typename T>
 	inline T* as_type() const { return dynamic_cast<T*>(ptr); }
 
-	inline Int asInt() const { return ptr->asInt(); };
-	inline Str asStr() const { return ptr->asStr(); };
-	inline Bool asBool() const { return ptr->asBool(); };
-	inline Float asFloat() const { return ptr->asFloat(); };
+	inline Int asInt() const { return ptr->as<Int>(); };
+	inline Str asStr() const { return ptr->as<Str>(); };
+	inline Bool asBool() const { return ptr->as<Bool>(); };
+	inline Float asFloat() const { return ptr->as<Float>(); };
 
 
 	/* comparison operators */
@@ -59,7 +60,7 @@ public:
 	Object& operator = (const Object &);
 	Object& operator = (Object &&);
 
-	inline bool operator not () const { return not ptr->asBool().data(); }
+	inline bool operator not () const { return not ptr->as<Bool>().data(); }
 	Object operator - () const;
 
 	Object operator + (const Object &) const;

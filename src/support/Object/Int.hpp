@@ -7,28 +7,26 @@
 namespace innerTypes {
 
 class Int: public None {
-	iinf value;
+public:
+	using value_type = iinf;
+private:
+	value_type value;
 
 public:
 	/* constructors */
 	Int();
-	explicit Int(iinf &&);
-
-	explicit Int(const iinf &);
-	explicit Int(const str &);
-	explicit Int(const char *&&);
-	explicit Int(bool);
-	explicit Int(f64);
+	explicit Int(value_type &&);
+	explicit Int(const value_type &);
+	// explicit Int(const str &);
+	// explicit Int(const char *&&);
+	// explicit Int(bool);
+	// explicit Int(f64);
 
 	/* destructor */
 	~Int();
 
-	// inline bool isInt() const override { return true; };
 
-	Int asInt() const override;
-	Str asStr() const override;
-	Bool asBool() const override;
-	Float asFloat() const override;
+	template <typename T> T as() const;
 
 	inline iinf& ref() { return value; }
 	inline const iinf& data() const { return value; }
@@ -44,21 +42,14 @@ public:
 	template <typename T> inline bool operator <= (const T &rhs) const { return compare(rhs) <= 0; };
 	template <typename T> inline bool operator >= (const T &rhs) const { return compare(rhs) >= 0; };
 
-	template <typename T> Object operator = (const T &) const;
-
 	template <typename T> Object operator + (const T &) const;
 	template <typename T> Object operator - (const T &) const;
 	template <typename T> Object operator * (const T &) const;
 	template <typename T> Object operator / (const T &) const;
 	template <typename T> Object div(const T &) const;
 	template <typename T> Object operator % (const T &) const;
-
-
-
 };
 
 }
 
 #endif
-
-// operator + - * / % <=> = and or not

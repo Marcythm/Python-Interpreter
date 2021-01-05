@@ -13,13 +13,14 @@ None *const Object::noneptr(const_cast<None*>(&NONE));
 
 Object::Object(): ptr(noneptr) {}
 Object::Object(const Object &rhs): Object() {
-	if (auto p = rhs.as_type<Int>()) 				ptr = new Int(*p);
+	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
 	else if (auto p = rhs.as_type<Str>()) 			ptr = new Str(*p);
 	else if (auto p = rhs.as_type<Bool>()) 			ptr = new Bool(*p);
 	else if (auto p = rhs.as_type<Float>()) 		ptr = new Float(*p);
 }
 Object::Object(Object &&rhs): ptr(rhs.ptr) { rhs.ptr = nullptr; }
 
+Object::Object(i32 rhs): ptr(new Int(iinf(rhs))) {}
 Object::Object(const iinf &rhs): ptr(new Int(rhs)) {}
 Object::Object(const str &rhs): ptr(new Str(rhs)) {}
 Object::Object(const char *rhs): ptr(new Str(rhs)) {}
@@ -27,7 +28,7 @@ Object::Object(bool rhs): ptr(new Bool(rhs)) {}
 Object::Object(f64 rhs): ptr(new Float(rhs)) {}
 
 /* ---------- destructor ---------- */
-Object::~Object() { delete ptr; }
+Object::~Object() { if (ptr != noneptr) delete ptr; }
 
 
 
@@ -35,18 +36,18 @@ Object::~Object() { delete ptr; }
 i8 Object::compare(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->compare(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->compare(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->compare(*q);
+		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	} else if (auto p = as_type<Str>()) {
 		if (auto q = rhs.as_type<Str>())			return p->compare(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->compare(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->compare(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	} else if (auto p = as_type<Float>()) {
 		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->compare(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->compare(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -54,6 +55,7 @@ i8 Object::compare(const Object &rhs) const {
 /* ---------- assignment operators ---------- */
 
 Object& Object::operator = (const Object &rhs) {
+	this->~Object();
 	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
 	else if (auto p = rhs.as_type<Str>()) 			ptr = new Str(*p);
 	else if (auto p = rhs.as_type<Bool>()) 			ptr = new Bool(*p);
@@ -62,25 +64,33 @@ Object& Object::operator = (const Object &rhs) {
 	return *this;
 }
 Object& Object::operator = (Object &&rhs) {
+	this->~Object();
 	ptr = rhs.ptr; rhs.ptr = nullptr;
 	return *this;
+}
+
+Object Object::operator - () const {
+	if (auto p = as_type<Float>())					return Object(-p->data());
+	if (auto p = as_type<Int>())					return Object(-p->data());
+	if (auto p = as_type<Bool>())					return Object(p->data() ? -1 : 0);
+	throw std::invalid_argument("");
 }
 
 Object Object::operator + (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator+(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator+(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->operator+(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
 	} else if (auto p = as_type<Str>()) {
 		if (auto q = rhs.as_type<Str>())			return p->operator+(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator+(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator+(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
 	} else if (auto p = as_type<Float>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator+(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator+(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -88,16 +98,16 @@ Object Object::operator + (const Object &rhs) const {
 Object Object::operator - (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator-(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator-(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->operator-(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator-(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator-(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
 	} else if (auto p = as_type<Float>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator-(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator-(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -105,21 +115,21 @@ Object Object::operator - (const Object &rhs) const {
 Object Object::operator * (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		else if (auto q = rhs.as_type<Str>())		return p->operator*(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator*(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator*(*q);
+		if (auto q = rhs.as_type<Str>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->operator*(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
 	} else if (auto p = as_type<Str>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator*(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		else if (auto q = rhs.as_type<Str>())		return p->operator*(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator*(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator*(*q);
+		if (auto q = rhs.as_type<Str>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
 	} else if (auto p = as_type<Float>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator*(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator*(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -127,16 +137,10 @@ Object Object::operator * (const Object &rhs) const {
 Object Object::operator / (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator/(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator/(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->operator/(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator/(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator/(*q);
-	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator/(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator/(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -144,16 +148,16 @@ Object Object::operator / (const Object &rhs) const {
 Object Object::div(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->div(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->div(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->div(*q);
+		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->div(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->div(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
+		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	} else if (auto p = as_type<Float>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->div(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->div(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
+		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	}
 	throw std::invalid_argument("");
 }
@@ -161,16 +165,10 @@ Object Object::div(const Object &rhs) const {
 Object Object::operator % (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
-		else if (auto q = rhs.as_type<Bool>()) 		return p->operator%(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator%(*q);
+		if (auto q = rhs.as_type<Bool>()) 			return p->operator%(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator%(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator%(*q);
-	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
-		else if (auto q = rhs.as_type<Bool>())		return p->operator%(*q);
-		else if (auto q = rhs.as_type<Float>())		return p->operator%(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator%(*q);
 	}
 	throw std::invalid_argument("");
 }

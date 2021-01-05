@@ -6,7 +6,10 @@
 namespace innerTypes {
 
 class Float: public None {
-	f64 value;
+public:
+	using value_type = f64;
+private:
+	value_type value;
 
 public:
 	/* constructors */
@@ -16,17 +19,13 @@ public:
 	explicit Float(const str &);
 	explicit Float(const char *&&);
 	explicit Float(bool);
-	explicit Float(f64);
+	explicit Float(value_type);
 
 	/* destructor */
 	~Float();
 
-	// inline bool isFloat() const override { return true; };
 
-	Int asInt() const override;
-	Str asStr() const override;
-	Bool asBool() const override;
-	Float asFloat() const override;
+	template <typename T> T as() const;
 
 	inline f64& ref() { return value; };
 	inline const f64& data() const { return value; };

@@ -16,10 +16,10 @@ Str::Str(f64 val): value(std::to_string(val)) {}
 Str::~Str() = default;
 
 
-Int Str::asInt() const { return Int(value); }
-Str Str::asStr() const { return *this; }
-Bool Str::asBool() const { return Bool(value); }
-Float Str::asFloat() const { return Float(value); }
+template <> Int Str::as<Int>() const { return Int(value); }
+template <> Str Str::as<Str>() const { return *this; }
+template <> Bool Str::as<Bool>() const { return Bool(value); }
+template <> Float Str::as<Float>() const { return Float(value); }
 
 
 /* ---------- comparison operators ---------- */
@@ -30,5 +30,7 @@ template <typename T> i8 Str::compare(const T &rhs) const {
 		str("TypeError: comparison not supported between instances of 'str' and ") + typeid(T).name()
 	);
 }
+
+
 
 }

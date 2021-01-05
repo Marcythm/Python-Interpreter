@@ -15,10 +15,10 @@ Bool::Bool(f64 val): value(val != 0) {}
 Bool::~Bool() = default;
 
 
-Int Bool::asInt() const { return Int(value); }
-Str Bool::asStr() const { return Str(value); }
-Bool Bool::asBool() const { return *this; }
-Float Bool::asFloat() const { return Float(value); }
+template <> Int Bool::as<Int>() const { return Int(value); }
+template <> Str Bool::as<Str>() const { return Str(value); }
+template <> Bool Bool::as<Bool>() const { return *this; }
+template <> Float Bool::as<Float>() const { return Float(value); }
 
 
 /* ---------- comparison operators ---------- */

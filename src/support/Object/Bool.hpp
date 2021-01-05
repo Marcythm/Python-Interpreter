@@ -6,7 +6,10 @@
 namespace innerTypes {
 
 class Bool: public None {
-	bool value;
+public:
+	using value_type = bool;
+private:
+	value_type value;
 
 public:
 	/* constructors */
@@ -15,18 +18,14 @@ public:
 	explicit Bool(const iinf &);
 	explicit Bool(const str &);
 	explicit Bool(const char *&&);
-	explicit Bool(bool);
+	explicit Bool(value_type);
 	explicit Bool(f64);
 
 	/* destructor */
 	~Bool();
 
-	// inline bool isBool() const override { return true; };
 
-	Int asInt() const override;
-	Str asStr() const override;
-	Bool asBool() const override;
-	Float asFloat() const override;
+	template <typename T> T as() const;
 
 	inline bool& ref() { return value; };
 	inline const bool& data() const { return value; };

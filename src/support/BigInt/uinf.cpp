@@ -16,10 +16,10 @@ u32 uinf::len() const { return value.size(); }
 bool uinf::iszero() const { return value.size() == 0; }
 
 template <>
-bool uinf::to<bool>() const { return value.size() != 0; }
+bool uinf::as<bool>() const { return value.size() != 0; }
 
 template <>
-str uinf::to<str>() const {
+str uinf::as<str>() const {
 	if (iszero()) return str("0");
 	str s; s.reserve(len());
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
@@ -28,7 +28,7 @@ str uinf::to<str>() const {
 }
 
 template <>
-u32 uinf::to<u32>() const {
+u32 uinf::as<u32>() const {
 	if (value.size() > 9) throw std::bad_cast();
 	u32 val = 0;
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
@@ -37,7 +37,7 @@ u32 uinf::to<u32>() const {
 }
 
 template <>
-u64 uinf::to<u64>() const {
+u64 uinf::as<u64>() const {
 	if (value.size() > 18) throw std::bad_cast();
 	u64 val = 0;
 	for (auto i = value.rbegin(); i != value.rend(); ++i)
@@ -46,7 +46,7 @@ u64 uinf::to<u64>() const {
 }
 
 template <>
-f64 uinf::to<f64>() const { return std::stod(to<str>()); }
+f64 uinf::as<f64>() const { return std::stod(as<str>()); }
 
 /* ---------- constructors and assignment operators ---------- */
 
@@ -191,7 +191,7 @@ uinf& uinf::operator %= (const uinf &rhs) { return *this = *this % rhs; }
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i32 uinf::cmp(const uinf &rhs) const {
+i32 uinf::compare(const uinf &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
 	for (i32 i = len() - 1; i >= 0; --i)
@@ -200,9 +200,9 @@ i32 uinf::cmp(const uinf &rhs) const {
 	return 0;
 }
 
-bool uinf::operator == (const uinf &rhs) const { return cmp(rhs) == 0;}
-bool uinf::operator != (const uinf &rhs) const { return cmp(rhs) != 0; }
-bool uinf::operator < (const uinf &rhs) const { return cmp(rhs) < 0; }
-bool uinf::operator > (const uinf &rhs) const { return cmp(rhs) > 0; }
-bool uinf::operator <= (const uinf &rhs) const { return cmp(rhs) <= 0; }
-bool uinf::operator >= (const uinf &rhs) const { return cmp(rhs) >= 0; }
+bool uinf::operator == (const uinf &rhs) const { return compare(rhs) == 0;}
+bool uinf::operator != (const uinf &rhs) const { return compare(rhs) != 0; }
+bool uinf::operator < (const uinf &rhs) const { return compare(rhs) < 0; }
+bool uinf::operator > (const uinf &rhs) const { return compare(rhs) > 0; }
+bool uinf::operator <= (const uinf &rhs) const { return compare(rhs) <= 0; }
+bool uinf::operator >= (const uinf &rhs) const { return compare(rhs) >= 0; }

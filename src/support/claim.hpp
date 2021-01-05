@@ -30,7 +30,6 @@ using f128 = long double;
 
 template <typename T> using ptr = T*;
 
-using str = std::string;
 template <typename T> using Vec = std::vector<T>;
 
 using str = std::string;
@@ -39,12 +38,14 @@ using str = std::string;
 class uinf;
 class iinf;
 
+namespace innerTypes {
+	class None;
+	class Int;
+	class Float;
+	class Str;
+	class Bool;
+}
 
-class ObjectNone;
-class ObjectInt;
-class ObjectFloat;
-class ObjectStr;
-class ObjectBool;
 class Object;
 
 

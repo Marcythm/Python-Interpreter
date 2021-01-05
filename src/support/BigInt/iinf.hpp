@@ -15,7 +15,7 @@ static constexpr i8 POS = 1;
 
 public:
 	u32 len() const;
-	template <typename T> T to() const;
+	template <typename T> T as() const;
 
 	bool isnegative() const;
 	bool iszero() const;
@@ -55,7 +55,7 @@ public:
 	iinf& operator /= (const iinf &rhs);
 	iinf& operator %= (const iinf &rhs);
 
-	i32 cmp(const iinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
+	i32 compare(const iinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
 	bool operator == (const iinf &rhs) const;
 	bool operator != (const iinf &rhs) const;
 	bool operator < (const iinf &rhs) const;

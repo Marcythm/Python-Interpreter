@@ -3,7 +3,6 @@
 #ifndef Python_Interpreter_Support_FlowControl
 #define Python_Interpreter_Support_FlowControl
 
-
 #include "claim.hpp"
 
 class FlowController {
@@ -24,6 +23,7 @@ public:
 	void exit() { states.top() = FlowState::EXIT; }
 
 	bool active() const { return states.top() == FlowState::ACTIVE; }
+	bool exited() const { return states.top() == FlowState::EXIT; }
 
 	void newScope() { states.push(FlowState::ACTIVE); }
 	void delScope() { states.pop(); }

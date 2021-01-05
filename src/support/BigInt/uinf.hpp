@@ -1,7 +1,7 @@
 #ifndef Python_Interpreter_Support_unsigned_integer
 #define Python_Interpreter_Support_unsigned_integer
 
-#include "claim.hpp"
+#include "../claim.hpp"
 
 class uinf {
 	/* lower bit in lower index
@@ -15,7 +15,7 @@ class uinf {
 public:
 	u32 len() const;
 	bool iszero() const;
-	template <typename T> T to() const;
+	template <typename T> T as() const;
 
 	uinf();
 	// template <typename T> uinf(T val);
@@ -49,7 +49,7 @@ public:
 	uinf& operator /= (const uinf &rhs);
 	uinf& operator %= (const uinf &rhs);
 
-	i32 cmp(const uinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
+	i32 compare(const uinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
 	bool operator == (const uinf &rhs) const;
 	bool operator != (const uinf &rhs) const;
 	bool operator < (const uinf &rhs) const;

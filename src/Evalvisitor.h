@@ -3,12 +3,11 @@
 
 
 #include "../generated/Python3BaseVisitor.h"
-#include "support/iinf.hpp"
+#include "support/Object/Object.hpp"
+#include "support/FlowControl.hpp"
 
-using Obj = iinf;
 
 class EvalVisitor: public Python3BaseVisitor {
-	std::map<str, Obj> vars;
 //todo:override all methods of Python3BaseVisitor
 public:
 

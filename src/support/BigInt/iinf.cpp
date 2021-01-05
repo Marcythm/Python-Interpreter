@@ -13,19 +13,19 @@ bool iinf::iszero() const { return sign == ZERO; }
 bool iinf::ispositive() const { return sign == POS; }
 
 template <>
-bool iinf::to<bool>() const { return sign != 0; }
+bool iinf::as<bool>() const { return sign != 0; }
 
 template <>
-str iinf::to<str>() const { return (isnegative() ? "-" : "") + value.to<str>(); }
+str iinf::as<str>() const { return (isnegative() ? "-" : "") + value.as<str>(); }
 
 template <>
-i32 iinf::to<i32>() const { return sign * static_cast<i32>(value.to<u32>()); }
+i32 iinf::as<i32>() const { return sign * static_cast<i32>(value.as<u32>()); }
 
 template <>
-i64 iinf::to<i64>() const { return sign * static_cast<i64>(value.to<u64>()); }
+i64 iinf::as<i64>() const { return sign * static_cast<i64>(value.as<u64>()); }
 
 template <>
-f64 iinf::to<f64>() const { return sign * value.to<f64>(); }
+f64 iinf::as<f64>() const { return sign * value.as<f64>(); }
 
 /* ---------- constructors and assignment operators ---------- */
 
@@ -99,14 +99,14 @@ iinf& iinf::operator %= (const iinf &rhs) { return *this = *this % rhs; }
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i32 iinf::cmp(const iinf &rhs) const {
+i32 iinf::compare(const iinf &rhs) const {
 	if (sign != rhs.sign) return sign < rhs.sign ? -1 : 1;
-	return isnegative() xor (value.cmp(rhs.value));
+	return isnegative() xor (value.compare(rhs.value));
 }
 
-bool iinf::operator == (const iinf &rhs) const { return cmp(rhs) == 0;}
-bool iinf::operator != (const iinf &rhs) const { return cmp(rhs) != 0; }
-bool iinf::operator < (const iinf &rhs) const { return cmp(rhs) < 0; }
-bool iinf::operator > (const iinf &rhs) const { return cmp(rhs) > 0; }
-bool iinf::operator <= (const iinf &rhs) const { return cmp(rhs) <= 0; }
-bool iinf::operator >= (const iinf &rhs) const { return cmp(rhs) >= 0; }
+bool iinf::operator == (const iinf &rhs) const { return compare(rhs) == 0;}
+bool iinf::operator != (const iinf &rhs) const { return compare(rhs) != 0; }
+bool iinf::operator < (const iinf &rhs) const { return compare(rhs) < 0; }
+bool iinf::operator > (const iinf &rhs) const { return compare(rhs) > 0; }
+bool iinf::operator <= (const iinf &rhs) const { return compare(rhs) <= 0; }
+bool iinf::operator >= (const iinf &rhs) const { return compare(rhs) >= 0; }

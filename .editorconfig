@@ -1,5 +1,5 @@
 root = true
 
-[*.cpp]
+[*.cpp, *.hpp]
 indent_style = tab
 indent_size = 4

@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef Python_Interpreter_claim
 #define Python_Interpreter_claim
 

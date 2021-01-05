@@ -1,3 +1,4 @@
+#pragma once
 #ifndef Python_Interpreter_Support_unsigned_integer
 #define Python_Interpreter_Support_unsigned_integer
 

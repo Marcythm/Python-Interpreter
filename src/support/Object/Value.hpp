@@ -1,5 +1,6 @@
-#ifndef Python_Interpreter_Support_Int
-#define Python_Interpreter_Support_Int
+#pragma once
+#ifndef Python_Interpreter_Support_Value
+#define Python_Interpreter_Support_Value
 
 #include "../BigInt/iinf.hpp"
 

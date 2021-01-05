@@ -1,3 +1,4 @@
+#pragma once
 #ifndef Python_Interpreter_Support_Object
 #define Python_Interpreter_Support_Object
 

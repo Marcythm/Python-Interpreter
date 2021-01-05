@@ -16,6 +16,7 @@ using innerTypes::Float;
 class Object {
 public:
 static const None NONE;
+static None *const noneptr;
 
 private:
 	None *ptr;

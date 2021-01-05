@@ -7,7 +7,7 @@ template <> str None::as<str>() const { return str("None"); }
 template <> bool None::as<bool>() const { return false; }
 
 template <typename T> T None::as() const {
-	if constexpr (std::is_base_of<None, T>::value)
+	if constexpr (std::is_base_of_v<None, T>)
 		return T(as<typename T::value_type>());
 	throw std::invalid_argument("Unsupported type in method as()");
 }
@@ -32,11 +32,11 @@ U Value<ValueType>::as() const {
 			if constexpr (std::is_same_v<Bool, T>)		return U(data() ? "True" : "False");
 			if constexpr (std::is_same_v<Float, T>)		return std::to_string(data());
 		}
-		if constexpr (std::is_same_v<Bool, U>) {
+		if constexpr (std::is_same_v<bool, U>) {
 			if constexpr (std::is_same_v<Str, T>)		return not data().empty();
 			if constexpr (std::is_same_v<Float, T>)		return data() != 0;
 		}
-		if constexpr (std::is_same_v<Float, U>) {
+		if constexpr (std::is_same_v<f64, U>) {
 			if constexpr (std::is_same_v<Str, T>)		return std::stod(data());
 			if constexpr (std::is_same_v<Bool, T>)		return data() ? 1 : 0;
 		}

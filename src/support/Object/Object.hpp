@@ -5,10 +5,6 @@
 #include "Value.hpp"
 
 using innerTypes::None;
-using innerTypes::Int;
-using innerTypes::Str;
-using innerTypes::Bool;
-using innerTypes::Float;
 
 class Object {
 public:

@@ -1,0 +1,14 @@
+# Project exclude paths
+/**/.DS_Store
+
+/build
+
+/.vscode
+/**/*.code-workspace
+/**/*.dSYM
+/**/*.java
+/**/*.o
+
+/test/data
+/**/main
+/test/hack.py

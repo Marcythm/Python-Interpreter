@@ -177,12 +177,10 @@ public:
 namespace innerTypes {
 
 
-	template <> str None::as<str>() const { return str("None"); }
-	template <> bool None::as<bool>() const { return false; }
-
 	template <typename T> T None::as() const {
-		if constexpr (std::is_base_of_v<None, T>)
-			return T(as<typename T::value_type>());
+		if constexpr (std::is_same_v<str, T>)				return str("None");
+		if constexpr (std::is_same_v<bool, T>)				return false;
+		if constexpr (is_storage_v<T>)						return T(as<typename T::value_type>());
 		throw std::invalid_argument("Unsupported type in method as()");
 	}
 

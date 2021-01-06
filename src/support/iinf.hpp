@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef Python_Interpreter_Support_signed_integer
-#define Python_Interpreter_Support_signed_integer
+#ifndef PYTHON_INTERPRETER_SUPPORT_IINF
+#define PYTHON_INTERPRETER_SUPPORT_IINF
 
 #include "uinf.hpp"
 

@@ -1,6 +1,7 @@
 #pragma once
-#ifndef Python_Interpreter_claim
-#define Python_Interpreter_claim
+
+#ifndef PYTHON_INTERPRETER_SUPPORT_PRECLAIM
+#define PYTHON_INTERPRETER_SUPPORT_PRECLAIM
 
 #include <vector>
 #include <string>
@@ -13,6 +14,7 @@
 
 #include <cassert>
 #include <cstring>
+
 
 using i8 = int8_t;
 using i16 = int16_t;
@@ -63,6 +65,12 @@ namespace innerTypes {
 }
 
 class Object;
+class RawFunction;
+class FunctionCall;
 
+namespace FlowControl {
+	class BREAK {};
+	class CONTINUE {};
+}
 
 #endif

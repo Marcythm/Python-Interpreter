@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef Python_Interpreter_Support_unsigned_integer
-#define Python_Interpreter_Support_unsigned_integer
+#ifndef PYTHON_INTERPRETER_SUPPORT_UINF
+#define PYTHON_INTERPRETER_SUPPORT_UINF
 
 #include "claim.hpp"
 

@@ -10,11 +10,11 @@ i32 main() {
 	if (not input.is_open()) return 1;
 	input >> a >> b;
 	// std::cin >> a >> b;
-	/*if (op == '+') */ printf("%s\n", (iinf(a) + iinf(b)).to<str>().c_str());
-	/*if (op == '-') */ printf("%s\n", (iinf(a) - iinf(b)).to<str>().c_str());
-	/*if (op == '*') */ printf("%s\n", (iinf(a) * iinf(b)).to<str>().c_str());
-	/*if (op == '/') */ printf("%s\n", (iinf(a) / iinf(b)).to<str>().c_str());
-	/*if (op == '%') */ printf("%s\n", (iinf(a) % iinf(b)).to<str>().c_str());
+	/*if (op == '+') */ printf("%s\n", (iinf(a) + iinf(b)).as<str>().c_str());
+	/*if (op == '-') */ printf("%s\n", (iinf(a) - iinf(b)).as<str>().c_str());
+	/*if (op == '*') */ printf("%s\n", (iinf(a) * iinf(b)).as<str>().c_str());
+	/*if (op == '/') */ printf("%s\n", (iinf(a) / iinf(b)).as<str>().c_str());
+	/*if (op == '%') */ printf("%s\n", (iinf(a) % iinf(b)).as<str>().c_str());
 
 	return 0;
 }

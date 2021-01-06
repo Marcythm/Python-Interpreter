@@ -1,10 +1,9 @@
 #pragma once
 
-#ifndef Python_Interpreter_Support_Object
-#define Python_Interpreter_Support_Object
+#ifndef PYTHON_INTERPRETER_SUPPORT_OBJECT
+#define PYTHON_INTERPRETER_SUPPORT_OBJECT
 
 #include "iinf.hpp"
-
 
 namespace innerTypes {
 
@@ -228,8 +227,13 @@ namespace innerTypes {
 			return data().compare(rhs.data());
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if (std::is_same_v<Float, T> or std::is_same_v<Float, U>) {
+#if _LIBCPP_STD_VER > 17
 				auto res = as<f64>() <=> rhs.template as<f64>();
 				return res < 0 ? -1 : res > 0 ? 1 : 0;
+#else
+				f64 lv = as<f64>(), rv = rhs.template as<f64>();
+				return lv < rv ? -1 : lv > rv ? 1 : 0;
+#endif
 			}
 			return as<iinf>().compare(rhs.template as<iinf>());
 		}
@@ -357,9 +361,6 @@ using innerTypes::Int;
 using innerTypes::Str;
 using innerTypes::Bool;
 using innerTypes::Float;
-
-const None Object::NONE;
-None *const Object::noneptr(const_cast<None*>(&NONE));
 
 /* ---------- construtors ---------- */
 Object::Object(): ptr(noneptr) {}

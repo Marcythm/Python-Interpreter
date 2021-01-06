@@ -10,7 +10,7 @@
 struct RawFunction {
 	Python3Parser::FuncdefContext *entry;
 	Vec<str> parameters;
-	std::map<str, Object> default_args;
+	std::unordered_map<str, Object> default_args;
 
 	RawFunction() = default;
 	RawFunction(RawFunction &&);
@@ -19,8 +19,8 @@ struct RawFunction {
 
 
 class FunctionCall {
-	static std::map<str, RawFunction> funcs;
-	std::map<str, Object> vars;
+	static std::unordered_map<str, RawFunction> funcs;
+	std::unordered_map<str, Object> vars;
 	RawFunction* entry_info;
 
 public:

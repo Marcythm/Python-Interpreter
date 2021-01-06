@@ -21,11 +21,14 @@ RawFunction::RawFunction(Python3Parser::FuncdefContext *ctx): entry(ctx) {
 
 FunctionCall* current;
 
-std::map<str, RawFunction> FunctionCall::funcs;
+std::unordered_map<str, RawFunction> FunctionCall::funcs;
 
 FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(FunctionCall::funcRef(ctx->atom()->getText()))) {
 	/* initialize */
-	if (entry_info) vars = entry_info->default_args;
+	vars = current->vars;
+	if (entry_info)
+		for (const auto &p: entry_info->default_args)
+			vars[p.first] = p.second;
 	if (auto arglis = ctx->trailer()->arglist()) {
 		auto args = arglis->argument();
 		auto argit = args.begin();
@@ -47,6 +50,12 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(F
 		result = std::move(res);
 	}
 	current = origin;
+
+	for (const auto &identifier: entry_info->parameters)
+		vars.erase(identifier);
+	for (const auto &var: vars)
+		if (auto p = current->vars.find(var.first); p != current->vars.end())
+			p->second = var.second;
 };
 
 

@@ -3,37 +3,37 @@
 #include "../../src/support/Object.hpp"
 
 struct Output {
-	inline Output& operator () (const Object &rhs) {
+	Output& operator () (const Object &rhs) {
 		std::cout << rhs.as<str>();
 		return *this;
 	}
 	template <typename T>
-	inline Output& operator () (const innerTypes::Value<T> &rhs) {
+	Output& operator () (const innerTypes::Value<T> &rhs) {
 		std::cout << rhs.template as<str>();
 		return *this;
 	}
-	inline Output& operator () (i8 c) {
+	Output& operator () (i8 c) {
 		std::cout << (i32)(c);
 		return *this;
 	}
 	template <typename T>
-	inline Output& operator () (const T &c) {
+	Output& operator () (const T &c) {
 		std::cout << c;
 		return *this;
 	}
 
 	template <typename T>
-	inline Output& err (const T &rhs) {
+	Output& err (const T &rhs) {
 		(*this)("\033[31m")(rhs)("\033[0m");
 		return *this;
 	}
 	template <typename T>
-	inline Output& correct(const T &rhs) {
+	Output& correct(const T &rhs) {
 		(*this)("\033[32m")(rhs)("\033[0m");
 		return *this;
 	}
 	template <typename T>
-	inline Output& highlight(const T &rhs) {
+	Output& highlight(const T &rhs) {
 		(*this)("\033[1m")(rhs)("\033[0m");
 		return *this;
 	}
@@ -51,6 +51,16 @@ inline str tpof(const Object &rhs) {
 }
 
 i32 main() {
+	out.correct("---------- test: operator not ----------\n");
+	for (i32 i = 0; i < 4; ++i)
+		try {
+			out("not ").highlight(type[i])(": ")
+				.highlight("(" + tpof(not var[i]) + ")")(not var[i])('\n');
+		} catch (std::invalid_argument e) {
+			out.err(e.what())('\n');
+		}
+	out('\n');
+
 	out.correct("---------- test: operator + ----------\n");
 	for (i32 i = 0; i < 4; ++i)
 		for (i32 j = 0; j < 4; ++j)

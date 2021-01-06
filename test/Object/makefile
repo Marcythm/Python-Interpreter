@@ -16,15 +16,13 @@ uinf.o: ../../src/support/uinf.cpp
 	clang++ -c ../../src/support/uinf.cpp -o uinf.o -std=c++2a -mcmodel=medany
 iinf.o: ../../src/support/iinf.cpp
 	clang++ -c ../../src/support/iinf.cpp -o iinf.o -std=c++2a -mcmodel=medany
-Value.o: ../../src/support/Value.cpp
-	clang++ -c ../../src/support/Value.cpp -o Value.o -std=c++2a -mcmodel=medany
 Object.o: ../../src/support/Object.cpp
 	clang++ -c ../../src/support/Object.cpp -o Object.o -std=c++2a -mcmodel=medany
 main.o: main.cpp
 	clang++ -c main.cpp -o main.o -std=c++2a -mcmodel=medany
 
-main: uinf.o iinf.o main.o
-	clang++ uinf.o iinf.o main.o -o main -Wl,-no_pie
+main: uinf.o iinf.o Object.o main.o
+	clang++ uinf.o iinf.o Object.o main.o -o main -Wl,-no_pie
 
 
 clean:

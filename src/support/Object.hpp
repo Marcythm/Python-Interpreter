@@ -173,6 +173,7 @@ public:
 
 /* ---------- implementations ---------- */
 
+#ifdef implementation
 
 namespace innerTypes {
 
@@ -563,5 +564,6 @@ Object Object::operator % (const Object &rhs) const {
 	throw std::invalid_argument("Unsupported type in operator %");
 }
 
+#endif
 
 #endif

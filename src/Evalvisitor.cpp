@@ -1,3 +1,5 @@
+#define implementation
+
 #include "Evalvisitor.h"
 
 using antlrcpp::Any;

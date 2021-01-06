@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(code)
 set(CMAKE_CXX_STANDARD 17)
+# SET (CMAKE_CXX_COMPILER  "/usr/local/bin/g++-10")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -g")
 include_directories(
         ${PROJECT_SOURCE_DIR}/generated/

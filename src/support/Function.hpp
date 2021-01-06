@@ -19,9 +19,8 @@ struct RawFunction {
 
 
 class FunctionCall {
+	static std::map<str, RawFunction> funcs;
 	std::map<str, Object> vars;
-	std::map<str, RawFunction*> funcs;
-	Vec<RawFunction*> newFuncs;
 	RawFunction* entry_info;
 
 public:
@@ -29,12 +28,12 @@ public:
 
 	FunctionCall() = default;
 	FunctionCall(Python3Parser::Atom_exprContext *);
-	~FunctionCall();
+	~FunctionCall() = default;
 
 	Object& varRef(const str &);
 	const Object& varVal(const str &) const;
-	void newFunction(Python3Parser::FuncdefContext *);
-	RawFunction& funcRef(const str &);
+	static void newFunction(Python3Parser::FuncdefContext *);
+	static RawFunction& funcRef(const str &);
 };
 
 

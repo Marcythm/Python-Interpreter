@@ -21,10 +21,11 @@ RawFunction::RawFunction(Python3Parser::FuncdefContext *ctx): entry(ctx) {
 
 FunctionCall* current;
 
-FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(current->funcRef(ctx->atom()->getText()))) {
+std::map<str, RawFunction> FunctionCall::funcs;
+
+FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(FunctionCall::funcRef(ctx->atom()->getText()))) {
 	/* initialize */
 	if (entry_info) vars = entry_info->default_args;
-	funcs = current->funcs;
 	if (auto arglis = ctx->trailer()->arglist()) {
 		auto args = arglis->argument();
 		auto argit = args.begin();
@@ -48,11 +49,6 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(c
 	current = origin;
 };
 
-FunctionCall::~FunctionCall() {
-	for (auto ptr: newFuncs)
-		delete ptr;
-}
-
 
 Object& FunctionCall::varRef(const str &name) {
 	return vars[name];
@@ -63,11 +59,9 @@ const Object& FunctionCall::varVal(const str &name) const {
 }
 
 void FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) {
-	auto ptr = new RawFunction(ctx);
-	funcs.emplace(ctx->NAME()->getText(), ptr);
-	newFuncs.emplace_back(ptr);
+	funcs.emplace(ctx->NAME()->getText(), RawFunction(ctx));
 }
 
 RawFunction& FunctionCall::funcRef(const str &name) {
-	return *funcs[name];
+	return funcs[name];
 }

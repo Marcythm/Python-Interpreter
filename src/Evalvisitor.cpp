@@ -24,7 +24,7 @@ Any EvalVisitor::visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx)	{ 
 extern FunctionCall* current;
 
 Any EvalVisitor::visitFuncdef(Python3Parser::FuncdefContext *ctx) {
-	current->newFunction(ctx);
+	FunctionCall::newFunction(ctx);
 	return Object();
 }
 
@@ -171,9 +171,6 @@ Any EvalVisitor::visitFactor(Python3Parser::FactorContext *ctx) {
 		return visitFactor(ctx->factor()).as<Object>();
 	} return visitAtom_expr(ctx->atom_expr());
 }
-
-#include <random>
-std::mt19937 rng;
 
 Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
 	if (ctx->trailer()) {

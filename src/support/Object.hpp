@@ -255,7 +255,7 @@ namespace innerTypes {
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
 				return Object(as<f64>() + rhs.template as<f64>());
-			return Object(as<Int>() + rhs.template as<Int>());
+			return Object(as<iinf>() + rhs.template as<iinf>());
 		}
 		throw std::invalid_argument("Unsupported type in operator +");
 	}

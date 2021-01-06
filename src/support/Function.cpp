@@ -38,7 +38,7 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(c
 	try {
 		current = this;
 		visitor.visit(entry_info->entry);
-		result = Vec<Object>(1, Object::NONE);
+		result = Vec<Object>(1, Object());
 	} catch (Vec<Object> res) {
 		result = std::move(res);
 	}

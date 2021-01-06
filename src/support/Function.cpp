@@ -64,7 +64,7 @@ const Object& FunctionCall::varVal(const str &name) const {
 
 void FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) {
 	auto ptr = new RawFunction(ctx);
-	funcs.emplace(std::make_pair(ctx->NAME()->getText(), ptr));
+	funcs.emplace(ctx->NAME()->getText(), ptr);
 	newFuncs.emplace_back(ptr);
 }
 

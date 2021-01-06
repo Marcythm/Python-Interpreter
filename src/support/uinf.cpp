@@ -191,7 +191,7 @@ uinf& uinf::operator %= (const uinf &rhs) { return *this = *this % rhs; }
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i32 uinf::compare(const uinf &rhs) const {
+i8 uinf::compare(const uinf &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
 	for (i32 i = len() - 1; i >= 0; --i)

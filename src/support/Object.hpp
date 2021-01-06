@@ -216,6 +216,7 @@ namespace innerTypes {
 				if constexpr (std::is_same_v<Bool, T>)		return data() ? 1 : 0;
 			}
 		}
+		if constexpr (std::is_integral_v<U>)				return as<iinf>().template as<U>();
 		throw std::invalid_argument("Unsupported type in method as()");
 	}
 
@@ -370,21 +371,27 @@ Object::Object(const Object &rhs): ptr(noneptr) {
 	else if (auto p = rhs.as_type<Float>()) 		ptr = new Float(*p);
 }
 
-template <typename T>
-Object::Object(T &&rhs) {
+template <typename _Tp>
+Object::Object(_Tp &&rhs) {
+	using T = std::decay_t<_Tp>;
 	if constexpr (innerTypes::in_typeset_v<T>)
 		ptr = new innerTypes::Value<T>(std::move(rhs));
 	else if constexpr (innerTypes::is_storage_v<T>)
 		ptr = new T(std::move(rhs));
-	else throw std::invalid_argument("Unsupported type in Object()");
+	else if constexpr (std::is_integral_v<T>)
+		ptr = new innerTypes::Int(iinf(rhs));
+	else throw std::invalid_argument(str("Unsupported type in Object():") + typeid(rhs).name());
 }
-template <typename T>
-Object::Object(const T &rhs) {
+template <typename _Tp>
+Object::Object(const _Tp &rhs) {
+	using T = std::decay_t<_Tp>;
 	if constexpr (innerTypes::in_typeset_v<T>)
 		ptr = new innerTypes::Value<T>(rhs);
 	else if constexpr (innerTypes::is_storage_v<T>)
 		ptr = new T(rhs);
-	else throw std::invalid_argument("Unsupported type in Object()");
+	else if constexpr (std::is_integral_v<T>)
+		ptr = new innerTypes::Int(iinf(rhs));
+	else throw std::invalid_argument(str("Unsupported type in Object():") + typeid(rhs).name());
 }
 
 /* ---------- destructor ---------- */

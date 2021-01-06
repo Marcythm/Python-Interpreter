@@ -57,7 +57,7 @@ public:
 	iinf& operator /= (const iinf &rhs);
 	iinf& operator %= (const iinf &rhs);
 
-	i32 compare(const iinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
+	i8 compare(const iinf &rhs) const; /* usage: equal to three-way comparison operator <=> */
 	bool operator == (const iinf &rhs) const;
 	bool operator != (const iinf &rhs) const;
 	bool operator < (const iinf &rhs) const;

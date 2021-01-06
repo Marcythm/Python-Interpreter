@@ -99,7 +99,7 @@ iinf& iinf::operator %= (const iinf &rhs) { return *this = *this % rhs; }
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i32 iinf::compare(const iinf &rhs) const {
+i8 iinf::compare(const iinf &rhs) const {
 	if (sign != rhs.sign) return sign < rhs.sign ? -1 : 1;
 	return isnegative() xor (value.compare(rhs.value));
 }

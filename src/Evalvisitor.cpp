@@ -94,6 +94,8 @@ Any EvalVisitor::visitSuite(Python3Parser::SuiteContext *ctx) { return visitChil
 Any EvalVisitor::visitTest(Python3Parser::TestContext *ctx) { return visitOr_test(ctx->or_test()); }
 
 Any EvalVisitor::visitOr_test(Python3Parser::Or_testContext *ctx) {
+	if (ctx->OR().empty())
+		return visitAnd_test(ctx->and_test(0));
 	for (auto subctx: ctx->and_test())
 		if (visitAnd_test(subctx).as<Object>().as<bool>())
 			return Object(true);
@@ -101,6 +103,8 @@ Any EvalVisitor::visitOr_test(Python3Parser::Or_testContext *ctx) {
 }
 
 Any EvalVisitor::visitAnd_test(Python3Parser::And_testContext *ctx) {
+	if (ctx->AND().empty())
+		return visitNot_test(ctx->not_test(0));
 	for (auto subctx: ctx->not_test())
 		if (not visitNot_test(subctx).as<Object>().as<bool>())
 			return Object(false);
@@ -114,12 +118,13 @@ Any EvalVisitor::visitNot_test(Python3Parser::Not_testContext *ctx) {
 }
 
 Any EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) {
-	if (ctx->comp_op().size() == 0)
+	if (ctx->comp_op().empty())
 		return visitArith_expr(ctx->arith_expr(0));
 
-	Object lhs, rhs = visitArith_expr(ctx->arith_expr(0)).as<Object>();
+	Object lhs, rhs = std::move(visitArith_expr(ctx->arith_expr(0)).as<Object>());
 	for (i32 i = 0, sz = ctx->comp_op().size(); i < sz; ++i) {
-		lhs = rhs; rhs = visitArith_expr(ctx->arith_expr(i + 1)).as<Object>();
+		lhs = std::move(rhs);
+		rhs = std::move(visitArith_expr(ctx->arith_expr(i + 1)).as<Object>());
 		if (const auto &&op = ctx->comp_op(i)->getText();
 			(op == "==" and lhs != rhs)
 		or	(op == "!=" and lhs == rhs)
@@ -167,23 +172,26 @@ Any EvalVisitor::visitFactor(Python3Parser::FactorContext *ctx) {
 	} return visitAtom_expr(ctx->atom_expr());
 }
 
+#include <random>
+std::mt19937 rng;
+
 Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
 	if (ctx->trailer()) {
 		const auto name = ctx->atom()->getText();
 		if (name == "print") {
-			auto args = ctx->trailer()->arglist()->argument();
-			auto it = args.begin();
-
-			printf("%s", visitTest((*it)->test(0)).as<Object>().as<str>().c_str());
-			for (; ++it != args.end(); )
-				printf(" %s", visitTest((*it)->test(0)).as<Object>().as<str>().c_str());
-			puts("");
+			if (auto arglis = ctx->trailer()->arglist()) {
+				auto args = arglis->argument();
+				auto it = args.begin();
+				printf("%s", visitTest((*it)->test(0)).as<Object>().as<str>().c_str());
+				for (; ++it != args.end(); )
+					printf(" %s", visitTest((*it)->test(0)).as<Object>().as<str>().c_str());
+			} puts("");
 			return Object();
 		}
-		else if (name == "int")		return visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Int>();
-		else if (name == "str")		return visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Str>();
-		else if (name == "bool")	return visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Bool>();
-		else if (name == "float")	return visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Float>();
+		else if (name == "int")		return Object(visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Int>());
+		else if (name == "str")		return Object(visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Str>());
+		else if (name == "bool")	return Object(visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Bool>());
+		else if (name == "float")	return Object(visitTest(ctx->trailer()->arglist()->argument(0)->test(0)).as<Object>().as<innerTypes::Float>());
 		// in this case the atom expression is a function call
 		auto result = FunctionCall(ctx).result;
 		if (result.size() == 1) return result[0];
@@ -194,13 +202,13 @@ Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
 
 Any EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) {
 	auto raw = ctx->getText();
-	if (ctx->NAME())		return current->varRef(raw);
-	if (ctx->NUMBER())		return Object(iinf(raw));
+	if (ctx->NAME())		return current->varVal(raw);
+	if (ctx->NUMBER())		return (raw.find('.') == str::npos) ? Object(iinf(raw)) : Object(std::stod(raw));
 	if (not (ctx->STRING().empty())) {
 		str res;
 		for (auto subctx: ctx->STRING()) {
 			auto substr = subctx->getText();
-			res.insert(res.end(), substr.begin(), substr.end());
+			res.insert(res.end(), ++substr.begin(), --substr.end());
 		}
 		return Object(res);
 	}

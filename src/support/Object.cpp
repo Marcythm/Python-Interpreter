@@ -5,7 +5,7 @@ innerTypes::None *const Object::noneptr(const_cast<innerTypes::None*>(&NONE));
 
 /* ---------- construtors ---------- */
 Object::Object(): ptr(noneptr) {}
-Object::Object(Object &&rhs): ptr(rhs.ptr) { rhs.ptr = nullptr; }
+Object::Object(Object &&rhs): ptr(rhs.ptr) { rhs.ptr = noneptr; }
 Object::Object(const Object &rhs): ptr(noneptr) {
 	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
 	else if (auto p = rhs.as_type<Str>()) 			ptr = new Str(*p);
@@ -49,12 +49,12 @@ Object& Object::operator = (const Object &rhs) {
 }
 Object& Object::operator = (Object &&rhs) {
 	this->~Object();
-	ptr = rhs.ptr; rhs.ptr = nullptr;
+	ptr = rhs.ptr; rhs.ptr = noneptr;
 	return *this;
 }
 
 /* ---------- operator: not ---------- */
-bool Object::operator not () const {
+Object Object::operator not () const {
 	if (auto p = as_type<Int>())					return not (p->as<bool>());
 	if (auto p = as_type<Str>())					return not (p->as<bool>());
 	if (auto p = as_type<Bool>())					return not (p->as<bool>());

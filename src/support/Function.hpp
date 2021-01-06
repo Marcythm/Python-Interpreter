@@ -8,29 +8,31 @@
 
 
 struct RawFunction {
-using entry_t = Python3Parser::FuncdefContext;
-
-	entry_t *entry;
+	Python3Parser::FuncdefContext *entry;
 	Vec<str> parameters;
 	std::map<str, Object> default_args;
 
 	RawFunction() = default;
 	RawFunction(RawFunction &&);
-	RawFunction(entry_t *);
+	RawFunction(Python3Parser::FuncdefContext *);
 };
 
 
-struct FunctionCall {
+class FunctionCall {
 	std::map<str, Object> vars;
-	std::map<str, RawFunction> funcs;
+	std::map<str, RawFunction*> funcs;
+	Vec<RawFunction*> newFuncs;
 	RawFunction* entry_info;
+
+public:
 	Vec<Object> result;
 
 	FunctionCall() = default;
 	FunctionCall(Python3Parser::Atom_exprContext *);
-	~FunctionCall() = default;
+	~FunctionCall();
 
 	Object& varRef(const str &);
+	const Object& varVal(const str &) const;
 	void newFunction(Python3Parser::FuncdefContext *);
 	RawFunction& funcRef(const str &);
 };

@@ -14,24 +14,28 @@ namespace innerTypes {
 	template <> struct in_typeset<str>						{	static constexpr bool value = true; 	};
 	template <> struct in_typeset<bool>						{	static constexpr bool value = true;		};
 	template <> struct in_typeset<f64>						{	static constexpr bool value = true; 	};
+	template <typename T> constexpr bool in_typeset_v = in_typeset<T>::value;
 
 	/* ---------- trait: is_storage ---------- */
 	template <typename T>
 				struct is_storage 							{	static constexpr bool value = false;	};
 	template <typename T>
 				struct is_storage<Value<T>> 				{	static constexpr bool value = in_typeset_v<T>; 	};
+	template <typename T> constexpr bool is_storage_v = is_storage<T>::value;
 
 	/* ---------- trait: is_integral_type ---------- */
 	template <typename T>
 				struct is_integral_type						{	static constexpr bool value = false;	};
 	template <> struct is_integral_type<iinf>				{	static constexpr bool value = true;		};
 	template <> struct is_integral_type<bool>				{	static constexpr bool value = true;		};
+	template <typename T> constexpr bool is_integral_type_v = is_integral_type<T>::value;
 
 	/* ---------- trait: is_integral_storage ---------- */
 	template <typename T>
 				struct is_integral_storage					{	static constexpr bool value = false;	};
 	template <typename T>
 				struct is_integral_storage<Value<T>>		{	static constexpr bool value = is_integral_type_v<T>;	};
+	template <typename T> constexpr bool is_integral_storage_v = is_integral_storage<T>::value;
 
 	/* ---------- trait: is_arithmetic_type ---------- */
 	template <typename T>
@@ -39,12 +43,14 @@ namespace innerTypes {
 	template <> struct is_arithmetic_type<iinf>				{	static constexpr bool value = true;		};
 	template <> struct is_arithmetic_type<bool>				{	static constexpr bool value = true;		};
 	template <> struct is_arithmetic_type<f64>				{	static constexpr bool value = true;		};
+	template <typename T> constexpr bool is_arithmetic_type_v = is_arithmetic_type<T>::value;
 
 	/* ---------- trait: is_arithmetic_storage ---------- */
 	template <typename T>
 				struct is_arithmetic_storage				{	static constexpr bool value = false;	};
 	template <typename T>
 				struct is_arithmetic_storage<Value<T>>		{	static constexpr bool value = is_arithmetic_type_v<T>;	};
+	template <typename T> constexpr bool is_arithmetic_storage_v = is_arithmetic_storage<T>::value;
 
 
 
@@ -77,8 +83,8 @@ namespace innerTypes {
 		/* destructor */
 		~Value() = default;
 
-		inline value_type& ref() { return value; }
-		inline const value_type& data() const { return value; }
+		value_type& ref() { return value; }
+		const value_type& data() const { return value; }
 
 		template <typename T> T as() const;
 
@@ -87,12 +93,12 @@ namespace innerTypes {
 
 		/* comparison operators */
 		template <typename T> i8 compare(const T &) const;
-		template <typename T> inline bool operator == (const T &rhs) const { return compare(rhs) == 0; };
-		template <typename T> inline bool operator != (const T &rhs) const { return compare(rhs) != 0; };
-		template <typename T> inline bool operator <  (const T &rhs) const { return compare(rhs) <  0; };
-		template <typename T> inline bool operator >  (const T &rhs) const { return compare(rhs) >  0; };
-		template <typename T> inline bool operator <= (const T &rhs) const { return compare(rhs) <= 0; };
-		template <typename T> inline bool operator >= (const T &rhs) const { return compare(rhs) >= 0; };
+		template <typename T> bool operator == (const T &rhs) const { return compare(rhs) == 0; };
+		template <typename T> bool operator != (const T &rhs) const { return compare(rhs) != 0; };
+		template <typename T> bool operator <  (const T &rhs) const { return compare(rhs) <  0; };
+		template <typename T> bool operator >  (const T &rhs) const { return compare(rhs) >  0; };
+		template <typename T> bool operator <= (const T &rhs) const { return compare(rhs) <= 0; };
+		template <typename T> bool operator >= (const T &rhs) const { return compare(rhs) >= 0; };
 
 		Object operator - () const;
 		template <typename T> Object operator + (const T &) const;
@@ -131,27 +137,27 @@ public:
 	~Object();
 
 	// template <typename T>
-	// inline bool is_type() const { return as_type<T>() != nullptr; }
+	// bool is_type() const { return as_type<T>() != nullptr; }
 
 	template <typename T>
-	inline T* as_type() const { return dynamic_cast<T*>(ptr); }
+	T* as_type() const { return dynamic_cast<T*>(ptr); }
 
 	template <typename T> T as() const;
 
 	/* comparison operators */
 	i8 compare(const Object &) const;
-	inline bool operator == (const Object &rhs) const { return compare(rhs) == 0; };
-	inline bool operator != (const Object &rhs) const { return compare(rhs) != 0; };
-	inline bool operator <  (const Object &rhs) const { return compare(rhs) <  0; };
-	inline bool operator >  (const Object &rhs) const { return compare(rhs) >  0; };
-	inline bool operator <= (const Object &rhs) const { return compare(rhs) <= 0; };
-	inline bool operator >= (const Object &rhs) const { return compare(rhs) >= 0; };
+	bool operator == (const Object &rhs) const { return compare(rhs) == 0; };
+	bool operator != (const Object &rhs) const { return compare(rhs) != 0; };
+	bool operator <  (const Object &rhs) const { return compare(rhs) <  0; };
+	bool operator >  (const Object &rhs) const { return compare(rhs) >  0; };
+	bool operator <= (const Object &rhs) const { return compare(rhs) <= 0; };
+	bool operator >= (const Object &rhs) const { return compare(rhs) >= 0; };
 
 	/* assignment operators */
 	Object& operator = (const Object &);
 	Object& operator = (Object &&);
 
-	bool operator not () const;
+	Object operator not () const;
 	Object operator - () const;
 
 	Object operator +	(const Object &) const;
@@ -161,12 +167,20 @@ public:
 	Object div			(const Object &) const;
 	Object operator %	(const Object &) const;
 
-	inline Object& operator +=	(const Object &rhs) { return *this = *this + rhs; };
-	inline Object& operator -=	(const Object &rhs) { return *this = *this - rhs; };
-	inline Object& operator *=	(const Object &rhs) { return *this = *this * rhs; };
-	inline Object& operator /=	(const Object &rhs) { return *this = *this / rhs; };
-	inline Object& diveq		(const Object &rhs) { return *this = this->div(rhs); };
-	inline Object& operator %=	(const Object &rhs) { return *this = *this % rhs; };
+	Object& operator +=	(const Object &rhs) { return *this = *this + rhs; };
+	Object& operator -=	(const Object &rhs) { return *this = *this - rhs; };
+	Object& operator *=	(const Object &rhs) { return *this = *this * rhs; };
+	Object& operator /=	(const Object &rhs) { return *this = *this / rhs; };
+	Object& diveq		(const Object &rhs) { return *this = this->div(rhs); };
+	Object& operator %=	(const Object &rhs) { return *this = *this % rhs; };
+
+	 i32 type() const {
+		if (auto p = as_type<innerTypes::Int>())				return 1;
+		else if (auto p = as_type<innerTypes::Str>()) 			return 2;
+		else if (auto p = as_type<innerTypes::Bool>()) 			return 3;
+		else if (auto p = as_type<innerTypes::Float>()) 		return 4;
+																return 0;
+	}
 };
 
 
@@ -180,7 +194,7 @@ namespace innerTypes {
 		if constexpr (std::is_same_v<str, T>)				return str("None");
 		if constexpr (std::is_same_v<bool, T>)				return false;
 		if constexpr (is_storage_v<T>)						return T(as<typename T::value_type>());
-		throw std::invalid_argument("Unsupported type in method as()");
+		throw std::invalid_argument(str("Unsupported type in method as(): ") + typeid(T).name());
 	}
 
 
@@ -213,7 +227,7 @@ namespace innerTypes {
 			}
 		}
 		if constexpr (std::is_integral_v<U>)				return as<iinf>().template as<U>();
-		throw std::invalid_argument("Unsupported type in method as()");
+		throw std::invalid_argument(str("Unsupported type in method as(): ") + typeid(U).name());
 	}
 
 	/* ---------- method: compare ---------- */
@@ -234,7 +248,7 @@ namespace innerTypes {
 			}
 			return as<iinf>().compare(rhs.template as<iinf>());
 		}
-		throw std::invalid_argument("Unsupported type in method compare()");
+		throw std::invalid_argument(str("Unsupported type in method compare(): ") + typeid(U).name());
 	}
 
 	/* ---------- operator: -(pre) ---------- */
@@ -245,7 +259,7 @@ namespace innerTypes {
 			return Object(data() ? -1 : 0);
 		if constexpr (is_arithmetic_storage_v<T>)
 			return Object(-data());
-		throw std::invalid_argument("Unsupported type in operator -(pre)");
+		throw std::invalid_argument(str("Unsupported type in operator -(pre): ") + typeid(T).name());
 	}
 
 	/* ---------- operator: + ---------- */
@@ -259,7 +273,7 @@ namespace innerTypes {
 				return Object(as<f64>() + rhs.template as<f64>());
 			return Object(as<iinf>() + rhs.template as<iinf>());
 		}
-		throw std::invalid_argument("Unsupported type in operator +");
+		throw std::invalid_argument(str("Unsupported type in operator +: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: - ---------- */
@@ -271,7 +285,7 @@ namespace innerTypes {
 				return Object(as<f64>() - rhs.template as<f64>());
 			return Object(as<iinf>() - rhs.template as<iinf>());
 		}
-		throw std::invalid_argument("Unsupported type in operator -");
+		throw std::invalid_argument(str("Unsupported type in operator -: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: * ---------- */
@@ -303,7 +317,7 @@ namespace innerTypes {
 				return Object(res);
 			}
 		}
-		throw std::invalid_argument("Unsupported type in operator *");
+		throw std::invalid_argument(str("Unsupported type in operator *: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: / ---------- */
@@ -317,7 +331,7 @@ namespace innerTypes {
 			}
 			return Object(as<iinf>() / rhs.template as<iinf>());
 		}
-		throw std::invalid_argument("Unsupported type in operator //");
+		throw std::invalid_argument(str("Unsupported type in operator //: ") + typeid(U).name());
 	}
 
 	/* ---------- method: div ---------- */
@@ -331,7 +345,7 @@ namespace innerTypes {
 			}
 			return Object(as<f64>() / rhs.template as<f64>());
 		}
-		throw std::invalid_argument("Unsupported type in operator /");
+		throw std::invalid_argument(str("Unsupported type in operator /: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: % ---------- */
@@ -345,7 +359,7 @@ namespace innerTypes {
 			}
 			return Object(as<iinf>() % rhs.template as<iinf>());
 		}
-		throw std::invalid_argument("Unsupported type in operator %");
+		throw std::invalid_argument(str("Unsupported type in operator %: ") + typeid(U).name());
 	}
 
 
@@ -371,7 +385,7 @@ Object::Object(_Tp &&rhs) {
 		ptr = new innerTypes::Int(iinf(rhs));
 	else if constexpr (std::is_same_v<T, Object>)
 		ptr = rhs.ptr, rhs.ptr = nullptr;
-	else throw std::invalid_argument(str("Unsupported type in Object():") + typeid(rhs).name());
+	else throw std::invalid_argument(str("Unsupported type in constructor Object(): ") + typeid(rhs).name());
 }
 template <typename _Tp>
 Object::Object(const _Tp &rhs) {
@@ -389,7 +403,7 @@ Object::Object(const _Tp &rhs) {
 		else if (auto p = rhs.template as_type<Bool>()) 		ptr = new Bool(*p);
 		else if (auto p = rhs.template as_type<Float>()) 		ptr = new Float(*p);
 	}
-	else throw std::invalid_argument(str("Unsupported type in Object():") + typeid(rhs).name());
+	else throw std::invalid_argument(str("Unsupported type in constructor Object(): ") + typeid(rhs).name());
 }
 
 

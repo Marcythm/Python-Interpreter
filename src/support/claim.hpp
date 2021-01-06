@@ -50,21 +50,6 @@ namespace innerTypes {
 	using Str = Value<str>;
 	using Bool = Value<bool>;
 	using Float = Value<f64>;
-
-
-	template <typename T> struct in_typeset;
-	template <typename T> constexpr bool in_typeset_v = in_typeset<T>::value;
-	template <typename T> struct is_storage;
-	template <typename T> constexpr bool is_storage_v = is_storage<T>::value;
-													//= std::is_base_of_v<None, T>;
-	template <typename T> struct is_integral_type;
-	template <typename T> constexpr bool is_integral_type_v = is_integral_type<T>::value;
-	template <typename T> struct is_integral_storage;
-	template <typename T> constexpr bool is_integral_storage_v = is_integral_storage<T>::value;
-	template <typename T> struct is_arithmetic_type;
-	template <typename T> constexpr bool is_arithmetic_type_v = is_arithmetic_type<T>::value;
-	template <typename T> struct is_arithmetic_storage;
-	template <typename T> constexpr bool is_arithmetic_storage_v = is_arithmetic_storage<T>::value;
 }
 
 class Object;

@@ -156,7 +156,7 @@ Any EvalVisitor::visitTerm(Python3Parser::TermContext *ctx) {
 			value *= visitFactor(ctx->factor(i + 1)).as<Object>();
 		else if (op == "%")
 			value %= visitFactor(ctx->factor(i + 1)).as<Object>();
-		else if (op == "//")
+		else if (op == "/")
 			value /= visitFactor(ctx->factor(i + 1)).as<Object>();
 		else
 			value.diveq(visitFactor(ctx->factor(i + 1)).as<Object>());

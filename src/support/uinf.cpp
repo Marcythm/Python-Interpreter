@@ -128,7 +128,7 @@ uinf uinf::operator - (const uinf &rhs) const {
 	for (u32 i = 0; i < rhs.len(); ++i)
 		if (ans[i] -= rhs[i]; ans[i] < 0)
 			ans[i] += 10, --ans[i + 1];
-	for (u32 i = rhs.len(); i < len() and ans[i] < 0; ++i)
+	for (u32 i = rhs.len(); i + 1 < len() and ans[i] < 0; ++i)
 		ans[i] += 10, --ans[i + 1];
 
 	ans.remove_leading_zero();
@@ -155,6 +155,7 @@ uinf uinf::operator / (const uinf &rhs) const {
 	uinf rem; Vec<i32> ans_vec;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
+		rem.remove_leading_zero();
 		i32 cur_rem = 0;
 		while (rem >= rhs) {
 			rem -= rhs;
@@ -173,6 +174,7 @@ uinf uinf::operator % (const uinf &rhs) const {
 	uinf rem;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
+		rem.remove_leading_zero();
 		while (rem >= rhs) rem -= rhs;
 	}
 

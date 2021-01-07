@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]){
     tree::ParseTree* tree=parser.file_input();
     try {
         visitor.visit(tree);
-    } catch (std::invalid_argument) {
+    } catch (...) {
         puts("Wrong Answer!");
     }
     return 0;

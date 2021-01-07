@@ -324,20 +324,6 @@ namespace innerTypes {
 	template <typename ValueType> template <typename U>
 	Object Value<ValueType>::operator / (const U &rhs) const {
 		using T = Value<ValueType>;
-		if constexpr (is_integral_storage_v<T> and is_integral_storage_v<U>) {
-			if constexpr (std::is_same_v<Bool, U>) {
-				if (rhs.data())	return Object(as<iinf>());
-				throw std::domain_error("ZeroDivisionError: division by zero");
-			}
-			return Object(as<iinf>() / rhs.template as<iinf>());
-		}
-		throw std::invalid_argument(str("Unsupported type in operator //: ") + typeid(U).name());
-	}
-
-	/* ---------- method: div ---------- */
-	template <typename ValueType> template <typename U>
-	Object Value<ValueType>::div(const U &rhs) const {
-		using T = Value<ValueType>;
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (is_integral_storage_v<U>) {
 				if (not rhs.template as<bool>())
@@ -346,6 +332,20 @@ namespace innerTypes {
 			return Object(as<f64>() / rhs.template as<f64>());
 		}
 		throw std::invalid_argument(str("Unsupported type in operator /: ") + typeid(U).name());
+	}
+
+	/* ---------- method: div ---------- */
+	template <typename ValueType> template <typename U>
+	Object Value<ValueType>::div(const U &rhs) const {
+		using T = Value<ValueType>;
+		if constexpr (is_integral_storage_v<T> and is_integral_storage_v<U>) {
+			if constexpr (std::is_same_v<Bool, U>) {
+				if (rhs.data())	return Object(as<iinf>());
+				throw std::domain_error("ZeroDivisionError: division by zero");
+			}
+			return Object(as<iinf>() / rhs.template as<iinf>());
+		}
+		throw std::invalid_argument(str("Unsupported type in operator //: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: % ---------- */

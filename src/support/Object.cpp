@@ -136,11 +136,17 @@ Object Object::operator / (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
 		if (auto q = rhs.as_type<Bool>()) 			return p->operator/(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
+	} else if (auto p = as_type<Float>()) {
+		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator //");
+	throw std::invalid_argument("Unsupported type in operator /");
 }
 
 /* ---------- method: div ---------- */
@@ -148,17 +154,11 @@ Object Object::div(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
 		if (auto q = rhs.as_type<Bool>()) 			return p->div(*q);
-		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	} else if (auto p = as_type<Bool>()) {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
-		if (auto q = rhs.as_type<Float>())			return p->div(*q);
-	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
-		if (auto q = rhs.as_type<Float>())			return p->div(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator /");
+	throw std::invalid_argument("Unsupported type in operator //");
 }
 
 /* ---------- operator: % ---------- */

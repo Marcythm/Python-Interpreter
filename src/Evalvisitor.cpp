@@ -71,8 +71,8 @@ Any EvalVisitor::visitReturn_stmt(Python3Parser::Return_stmtContext *ctx) {
 }
 
 Any EvalVisitor::visitIf_stmt(Python3Parser::If_stmtContext *ctx) {
-	const auto &&conds = ctx->test();
-	const auto &&suites = ctx->suite();
+	const auto conds = ctx->test();
+	const auto suites = ctx->suite();
 	for (i32 i = 0; i < i32(conds.size()); ++i)
 		if (visitTest(conds[i]).as<Object>().as<bool>())
 			return visitSuite(suites[i]);
@@ -125,7 +125,7 @@ Any EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) {
 	for (i32 i = 0, sz = ctx->comp_op().size(); i < sz; ++i) {
 		lhs = std::move(rhs);
 		rhs = std::move(visitArith_expr(ctx->arith_expr(i + 1)).as<Object>());
-		if (const auto &&op = ctx->comp_op(i)->getText();
+		if (const auto op = ctx->comp_op(i)->getText();
 			(op == "==" and lhs != rhs)
 		or	(op == "!=" and lhs == rhs)
 		or	(op == "<"  and lhs >= rhs)
@@ -139,9 +139,11 @@ Any EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) {
 }
 
 Any EvalVisitor::visitArith_expr(Python3Parser::Arith_exprContext *ctx) {
+	if (ctx->addorsub_op().empty())
+		return visitTerm(ctx->term(0));
 	Object value = std::move(visitTerm(ctx->term(0)).as<Object>());
 	for (i32 i = 0, sz = ctx->addorsub_op().size(); i < sz; ++i)
-		if (const auto &&op = ctx->addorsub_op(i)->getText(); op == "+")
+		if (const auto op = ctx->addorsub_op(i)->getText(); op == "+")
 			value += visitTerm(ctx->term(i + 1)).as<Object>();
 		else
 			value -= visitTerm(ctx->term(i + 1)).as<Object>();
@@ -150,16 +152,18 @@ Any EvalVisitor::visitArith_expr(Python3Parser::Arith_exprContext *ctx) {
 }
 
 Any EvalVisitor::visitTerm(Python3Parser::TermContext *ctx) {
+	if (ctx->muldivmod_op().empty())
+		return visitFactor(ctx->factor(0));
 	Object value = std::move(visitFactor(ctx->factor(0)).as<Object>());
 	for (i32 i = 0, sz = ctx->muldivmod_op().size(); i < sz; ++i)
-		if (const auto &&op = ctx->muldivmod_op(i)->getText(); op == "*")
+		if (const auto op = ctx->muldivmod_op(i)->getText(); op == "*")
 			value *= visitFactor(ctx->factor(i + 1)).as<Object>();
-		else if (op == "%")
-			value %= visitFactor(ctx->factor(i + 1)).as<Object>();
 		else if (op == "/")
 			value /= visitFactor(ctx->factor(i + 1)).as<Object>();
-		else
+		else if (op == "//")
 			value.diveq(visitFactor(ctx->factor(i + 1)).as<Object>());
+		else
+			value %= visitFactor(ctx->factor(i + 1)).as<Object>();
 
 	return value;
 }
@@ -216,9 +220,13 @@ Any EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) {
 }
 
 Any EvalVisitor::visitTestlist(Python3Parser::TestlistContext *ctx) {
+	const auto tests = ctx->test();
 	Vec<Object> res;
-	for (auto subctx: ctx->test())
-		res.emplace_back(std::move(visitTest(subctx).as<Object>()));
+	for (auto subctx: tests) {
+		auto tmp = std::move(visitTest(subctx));
+		if (tmp.is<Vec<Object>>()) return tmp.as<Vec<Object>>();
+		res.emplace_back(std::move(tmp.as<Object>()));
+	}
 	return res;
 }
 

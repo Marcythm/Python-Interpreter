@@ -31,7 +31,7 @@ public:
 	~FunctionCall() = default;
 
 	Object& varRef(const str &);
-	const Object& varVal(const str &) const;
+	const Object& varVal(const str &);
 	static void newFunction(Python3Parser::FuncdefContext *);
 	static RawFunction& funcRef(const str &);
 };

@@ -42,8 +42,8 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(F
 
 	/* run function suite */
 	auto origin = current;
+	current = this;
 	try {
-		current = this;
 		visitor.visitSuite(entry_info->entry->suite());
 		result = Vec<Object>(1, Object());
 	} catch (Vec<Object> res) {
@@ -63,8 +63,8 @@ Object& FunctionCall::varRef(const str &name) {
 	return vars[name];
 }
 
-const Object& FunctionCall::varVal(const str &name) const {
-	return vars.find(name)->second;
+const Object& FunctionCall::varVal(const str &name) {
+	return vars[name];
 }
 
 void FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) {

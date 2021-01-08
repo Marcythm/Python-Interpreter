@@ -39,6 +39,7 @@ i8 Object::compare(const Object &rhs) const {
 /* ---------- operator: = ---------- */
 
 Object& Object::operator = (const Object &rhs) {
+	if (this == &rhs) return *this;
 	this->~Object();
 	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
 	else if (auto p = rhs.as_type<Str>()) 			ptr = new Str(*p);
@@ -64,9 +65,9 @@ Object Object::operator not () const {
 
 /* ---------- operator: -(pre) ---------- */
 Object Object::operator - () const {
-	if (auto p = as_type<Float>())					return Object(-p->data());
 	if (auto p = as_type<Int>())					return Object(-p->data());
 	if (auto p = as_type<Bool>())					return Object(p->data() ? -1 : 0);
+	if (auto p = as_type<Float>())					return Object(-p->data());
 	throw std::invalid_argument("Unsupported type in operator -(pre)");
 }
 

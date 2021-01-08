@@ -22,6 +22,7 @@ Any EvalVisitor::visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx)	{ 
 
 
 extern FunctionCall* current;
+extern FunctionCall* global;
 
 Any EvalVisitor::visitFuncdef(Python3Parser::FuncdefContext *ctx) {
 	FunctionCall::newFunction(ctx);
@@ -232,7 +233,7 @@ Any EvalVisitor::visitTestlist(Python3Parser::TestlistContext *ctx) {
 
 
 EvalVisitor::EvalVisitor(): Python3BaseVisitor() {
-	current = new FunctionCall();
+	global = current = new FunctionCall();
 }
 EvalVisitor::~EvalVisitor() {
 	delete current;

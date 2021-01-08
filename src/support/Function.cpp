@@ -20,12 +20,13 @@ RawFunction::RawFunction(Python3Parser::FuncdefContext *ctx): entry(ctx) {
 }
 
 FunctionCall* current;
+FunctionCall* global;
 
 std::unordered_map<str, RawFunction> FunctionCall::funcs;
 
 FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(FunctionCall::funcRef(ctx->atom()->getText()))) {
 	/* initialize */
-	vars = current->vars;
+	vars = global->vars;
 	if (entry_info)
 		for (const auto &p: entry_info->default_args)
 			vars[p.first] = p.second;
@@ -54,7 +55,7 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(F
 	for (const auto &identifier: entry_info->parameters)
 		vars.erase(identifier);
 	for (const auto &var: vars)
-		if (auto p = current->vars.find(var.first); p != current->vars.end())
+		if (auto p = global->vars.find(var.first); p != global->vars.end())
 			p->second = var.second;
 };
 

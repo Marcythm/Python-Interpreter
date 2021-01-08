@@ -62,4 +62,26 @@ public:
 	friend class iinf;
 };
 
+template <typename T> T uinf::as() const {
+	if constexpr (std::is_same_v<T, bool>)
+		return value.size() == 0;
+	if constexpr (std::is_same_v<T, str>) {
+		if (iszero()) return str("0");
+		str s; s.reserve(len());
+		for (auto i = value.rbegin(); i != value.rend(); ++i)
+			s.push_back('0' + *i);
+		return s;
+	}
+	if constexpr (std::is_integral_v<T>) {
+		T val = 0;
+		for (auto i = value.rbegin(); i != value.rend(); ++i)
+			val = val * T(10) + T(*i);
+		return val;
+	}
+	if constexpr (std::is_same_v<T, f64>)
+		return std::stod(as<str>());
+	throw std::bad_cast();
+	return T();
+}
+
 #endif

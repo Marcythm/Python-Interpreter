@@ -15,10 +15,10 @@ int main(int argc, const char* argv[]){
     tokens.fill();
     Python3Parser parser(&tokens);
     tree::ParseTree* tree=parser.file_input();
-    // try {
+    try {
         visitor.visit(tree);
-    // } catch (const std::invalid_argument &e) {
-    //     std::cerr << e.what() << '\n';
-    // }
+    } catch (const std::bad_cast &e) {
+        std::cerr << e.what() << '\n';
+    }
     return 0;
 }

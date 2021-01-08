@@ -15,39 +15,6 @@ void uinf::remove_leading_zero() {
 u32 uinf::len() const { return value.size(); }
 bool uinf::iszero() const { return value.size() == 0; }
 
-template <>
-bool uinf::as<bool>() const { return value.size() != 0; }
-
-template <>
-str uinf::as<str>() const {
-	if (iszero()) return str("0");
-	str s; s.reserve(len());
-	for (auto i = value.rbegin(); i != value.rend(); ++i)
-		s.push_back('0' + *i);
-	return s;
-}
-
-template <>
-u32 uinf::as<u32>() const {
-	if (value.size() > 9) throw std::bad_cast();
-	u32 val = 0;
-	for (auto i = value.rbegin(); i != value.rend(); ++i)
-		val = val * 10 + *i;
-	return val;
-}
-
-template <>
-u64 uinf::as<u64>() const {
-	if (value.size() > 18) throw std::bad_cast();
-	u64 val = 0;
-	for (auto i = value.rbegin(); i != value.rend(); ++i)
-		val = val * 10 + *i;
-	return val;
-}
-
-template <>
-f64 uinf::as<f64>() const { return std::stod(as<str>()); }
-
 /* ---------- constructors and assignment operators ---------- */
 
 // template <typename T>
@@ -152,7 +119,7 @@ uinf uinf::operator * (const uinf &rhs) const {
 uinf uinf::operator / (const uinf &rhs) const {
 	if (rhs.iszero()) throw std::domain_error("in uinf::operator / : Divide By Zero");
 
-	uinf rem; Vec<i32> ans_vec;
+	uinf rem; Vec<i32> ans;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		rem.remove_leading_zero();
@@ -160,12 +127,11 @@ uinf uinf::operator / (const uinf &rhs) const {
 		while (rem >= rhs) {
 			rem -= rhs;
 			++cur_rem;
-		} ans_vec.emplace_back(cur_rem);
+		} ans.emplace_back(cur_rem);
 	}
 
-	std::reverse(ans_vec.begin(), ans_vec.end());
-	uinf ans(ans_vec); ans.remove_leading_zero();
-	return ans;
+	std::reverse(ans.begin(), ans.end());
+	return uinf(ans);
 }
 
 uinf uinf::operator % (const uinf &rhs) const {

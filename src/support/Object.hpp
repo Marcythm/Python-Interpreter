@@ -386,7 +386,7 @@ Object::Object(_Tp &&rhs) {
 	else if constexpr (std::is_integral_v<T>)
 		ptr = new innerTypes::Int(iinf(rhs));
 	else if constexpr (std::is_same_v<T, Object>)
-		ptr = rhs.ptr, rhs.ptr = nullptr;
+		ptr = rhs.ptr, rhs.ptr = noneptr;
 	else throw std::invalid_argument(str("Unsupported type in constructor Object(): ") + typeid(rhs).name());
 }
 template <typename _Tp>

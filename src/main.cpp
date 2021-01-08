@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]){
     tree::ParseTree* tree=parser.file_input();
     try {
         visitor.visit(tree);
-    } catch (const std::bad_cast &e) {
+    } catch (const std::invalid_argument &e) {
         std::cerr << e.what() << '\n';
     }
     return 0;

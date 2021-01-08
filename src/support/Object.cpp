@@ -1,7 +1,7 @@
 #include "Object.hpp"
 
-const innerTypes::None Object::NONE;
-innerTypes::None *const Object::noneptr(const_cast<innerTypes::None*>(&NONE));
+const innerTypes::NoneType Object::NONE;
+innerTypes::NoneType *const Object::noneptr(const_cast<innerTypes::NoneType*>(&NONE));
 
 /* ---------- construtors ---------- */
 Object::Object(): ptr(noneptr) {}
@@ -34,6 +34,13 @@ i8 Object::compare(const Object &rhs) const {
 		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	}
 	throw std::invalid_argument("Unsupported type in method compare()");
+}
+
+/* ---------- operator: == ---------- */
+bool Object::operator == (const Object &rhs) const {
+	if (isnone() or rhs.isnone())
+		return isnone() and rhs.isnone();
+	return compare(rhs) == 0;
 }
 
 /* ---------- operator: = ---------- */

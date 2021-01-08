@@ -45,7 +45,7 @@ class uinf;
 class iinf;
 
 namespace innerTypes {
-	class None;
+	class NoneType;
 	template <typename T> class Value;
 
 	using Int = Value<iinf>;

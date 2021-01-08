@@ -55,18 +55,18 @@ namespace innerTypes {
 
 
 
-	/* ---------- class: None ---------- */
+	/* ---------- class: NoneType ---------- */
 
-	struct None {
-		None() = default;
-		virtual ~None() = default;
+	struct NoneType {
+		NoneType() = default;
+		virtual ~NoneType() = default;
 
 		template <typename T> T as() const;
 	};
 
 	/* ---------- class: Value ---------- */
 	template <typename ValueType>
-	class Value: public None {
+	class Value: public NoneType {
 	public:
 		using value_type = ValueType;
 	private:
@@ -116,15 +116,15 @@ namespace innerTypes {
 
 }
 
-using innerTypes::None;
+using innerTypes::NoneType;
 
 class Object {
 public:
-static const None NONE;
-static None *const noneptr;
+static const NoneType NONE;
+static NoneType *const noneptr;
 
 private:
-	None *ptr;
+	NoneType *ptr;
 
 public:
 	Object();
@@ -139,6 +139,8 @@ public:
 	// template <typename T>
 	// bool is_type() const { return as_type<T>() != nullptr; }
 
+	inline bool isnone() const { return ptr == noneptr; }
+
 	template <typename T>
 	T* as_type() const { return dynamic_cast<T*>(ptr); }
 
@@ -146,8 +148,8 @@ public:
 
 	/* comparison operators */
 	i8 compare(const Object &) const;
-	bool operator == (const Object &rhs) const { return compare(rhs) == 0; };
-	bool operator != (const Object &rhs) const { return compare(rhs) != 0; };
+	bool operator == (const Object &rhs) const;
+	bool operator != (const Object &rhs) const { return not operator==(rhs); };
 	bool operator <  (const Object &rhs) const { return compare(rhs) <  0; };
 	bool operator >  (const Object &rhs) const { return compare(rhs) >  0; };
 	bool operator <= (const Object &rhs) const { return compare(rhs) <= 0; };
@@ -190,8 +192,8 @@ public:
 namespace innerTypes {
 
 
-	template <typename T> T None::as() const {
-		if constexpr (std::is_same_v<str, T>)				return str("None");
+	template <typename T> T NoneType::as() const {
+		if constexpr (std::is_same_v<str, T>)				return str("NoneType");
 		if constexpr (std::is_same_v<bool, T>)				return false;
 		if constexpr (is_storage_v<T>)						return T(as<typename T::value_type>());
 		throw std::invalid_argument(str("Unsupported type in method as(): ") + typeid(T).name());
@@ -367,7 +369,7 @@ namespace innerTypes {
 
 
 
-using innerTypes::None;
+using innerTypes::NoneType;
 using innerTypes::Int;
 using innerTypes::Str;
 using innerTypes::Bool;

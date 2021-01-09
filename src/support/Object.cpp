@@ -67,7 +67,7 @@ Object Object::operator not () const {
 	if (auto p = as_type<Str>())					return not (p->as<bool>());
 	if (auto p = as_type<Bool>())					return not (p->as<bool>());
 	if (auto p = as_type<Float>())					return not (p->as<bool>());
-	throw std::invalid_argument("Unsupported type in operator -(pre)");
+													return true;
 }
 
 /* ---------- operator: -(pre) ---------- */

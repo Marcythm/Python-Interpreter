@@ -7,7 +7,7 @@ generator: generator.cpp
 	clang++ generator.cpp -o generator -std=c++17 -O2
 
 main: main.cpp
-	clang++ main.cpp ../../src/support/uinf.cpp ../../src/support/iinf.cpp -o main -std=c++17 -fsanitize=address -fsanitize=undefined
+	clang++ main.cpp ../../src/support/u99.cpp -o main -std=c++17
 
 clean:
 	rm -f input answer output generator main

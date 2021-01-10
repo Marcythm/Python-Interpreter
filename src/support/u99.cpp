@@ -1,10 +1,10 @@
-#include "uinf.hpp"
+#include "u99.hpp"
 
 
 /* ---------- private functions ---------- */
 
-void uinf::resize(u32 new_length) { value.resize(new_length); }
-void uinf::remove_leading_zero() {
+void u99::resize(u32 new_length) { value.resize(new_length); }
+void u99::remove_leading_zero() {
 	while (not value.empty() and value.back() == 0) value.pop_back();
 }
 
@@ -12,13 +12,13 @@ void uinf::remove_leading_zero() {
 
 /* ---------- public functions ----------  */
 
-u32 uinf::len() const { return value.size(); }
-bool uinf::iszero() const { return value.size() == 0; }
+u32 u99::len() const { return value.size(); }
+bool u99::iszero() const { return value.size() == 0; }
 
 /* ---------- constructors and assignment operators ---------- */
 
 // template <typename T>
-uinf::uinf(i32 val) {
+u99::u99(i32 val) {
 	// if constexpr (std::is_integral<T>::value) {
 		val = std::abs(val);
 		do {
@@ -27,7 +27,7 @@ uinf::uinf(i32 val) {
 		} while (val > 0);
 	// } else throw "constructing an unsigned integer with an non-integral value";
 }
-uinf::uinf(i64 val) {
+u99::u99(i64 val) {
 	// if constexpr (std::is_integral<T>::value) {
 		val = std::abs(val);
 		do {
@@ -37,9 +37,9 @@ uinf::uinf(i64 val) {
 	// } else throw "constructing an unsigned integer with an non-integral value";
 }
 
-uinf::uinf(): value() {}
+u99::u99(): value() {}
 
-uinf::uinf(const char *s) {
+u99::u99(const char *s) {
 	value.insert(value.end(), s, s + strlen(s));
 	std::reverse(value.begin(), value.end());
 	auto pos = value.begin();
@@ -47,7 +47,7 @@ uinf::uinf(const char *s) {
 	value.erase(pos, value.end());
 	remove_leading_zero();
 }
-uinf::uinf(const str &s) {
+u99::u99(const str &s) {
 	value.insert(value.end(), s.begin(), s.end());
 	std::reverse(value.begin(), value.end());
 	auto pos = value.begin();
@@ -56,28 +56,28 @@ uinf::uinf(const str &s) {
 	remove_leading_zero();
 }
 
-uinf::uinf(const Vec<i32> &rhs): value(rhs) { remove_leading_zero(); }
-uinf::uinf(Vec<i32> &&rhs): value(std::move(rhs)) { remove_leading_zero(); }
+u99::u99(const Vec<i32> &rhs): value(rhs) { remove_leading_zero(); }
+u99::u99(Vec<i32> &&rhs): value(std::move(rhs)) { remove_leading_zero(); }
 
-uinf::uinf(const uinf &rhs) = default;
-uinf::uinf(uinf &&rhs) noexcept { value = std::move(rhs.value); }
+u99::u99(const u99 &rhs) = default;
+u99::u99(u99 &&rhs) noexcept { value = std::move(rhs.value); }
 
-uinf& uinf::operator = (const uinf &rhs) = default;
-uinf& uinf::operator = (uinf &&rhs) noexcept {
+u99& u99::operator = (const u99 &rhs) = default;
+u99& u99::operator = (u99 &&rhs) noexcept {
 	value = std::move(rhs.value);
 	return *this;
 }
 
-i32& uinf::operator [] (const u32 index) { return value[index]; }
-const i32& uinf::operator [] (const u32 index) const { return value[index]; }
+i32& u99::operator [] (const u32 index) { return value[index]; }
+const i32& u99::operator [] (const u32 index) const { return value[index]; }
 
 
 /* ---------- arithmetic operators ---------- */
 
-uinf uinf::operator + (const uinf &rhs) const {
+u99 u99::operator + (const u99 &rhs) const {
 	if (len() > rhs.len()) return rhs + *this;
 	/* assume that len() <= rhs.len(); */
-	uinf ans(rhs); ans.resize(ans.len() + 1);
+	u99 ans(rhs); ans.resize(ans.len() + 1);
 	for (u32 i = 0; i < len(); ++i)
 		if (ans[i] += value[i]; ans[i] > 9)
 			ans[i] -= 10, ++ans[i + 1];
@@ -88,10 +88,10 @@ uinf uinf::operator + (const uinf &rhs) const {
 	return ans;
 }
 
-uinf uinf::operator - (const uinf &rhs) const {
+u99 u99::operator - (const u99 &rhs) const {
 	assert(*this >= rhs);
 	/* assume that the result is non-negative */
-	uinf ans(*this);
+	u99 ans(*this);
 	for (u32 i = 0; i < rhs.len(); ++i)
 		if (ans[i] -= rhs[i]; ans[i] < 0)
 			ans[i] += 10, --ans[i + 1];
@@ -102,8 +102,8 @@ uinf uinf::operator - (const uinf &rhs) const {
 	return ans;
 }
 
-uinf uinf::operator * (const uinf &rhs) const {
-	uinf ans; ans.resize(len() + rhs.len() + 1);
+u99 u99::operator * (const u99 &rhs) const {
+	u99 ans; ans.resize(len() + rhs.len() + 1);
 	for (u32 i = 0; i < len(); ++i)
 		for (u32 j = 0; j < rhs.len(); ++j)
 			ans[i + j] += value[i] * rhs[j];
@@ -116,10 +116,10 @@ uinf uinf::operator * (const uinf &rhs) const {
 	return ans;
 }
 
-uinf uinf::operator / (const uinf &rhs) const {
-	if (rhs.iszero()) throw std::domain_error("in uinf::operator / : Divide By Zero");
+u99 u99::operator / (const u99 &rhs) const {
+	if (rhs.iszero()) throw std::domain_error("in u99::operator / : Divide By Zero");
 
-	uinf rem; Vec<i32> ans;
+	u99 rem; Vec<i32> ans;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		rem.remove_leading_zero();
@@ -131,13 +131,13 @@ uinf uinf::operator / (const uinf &rhs) const {
 	}
 
 	std::reverse(ans.begin(), ans.end());
-	return uinf(ans);
+	return u99(ans);
 }
 
-uinf uinf::operator % (const uinf &rhs) const {
-	if (rhs.iszero()) throw std::domain_error("in uinf::operator % : Modulo By Zero");
+u99 u99::operator % (const u99 &rhs) const {
+	if (rhs.iszero()) throw std::domain_error("in u99::operator % : Modulo By Zero");
 
-	uinf rem;
+	u99 rem;
 	for (auto i = value.rbegin(); i != value.rend(); ++i) {
 		rem.value.insert(rem.value.begin(), *i);
 		rem.remove_leading_zero();
@@ -149,17 +149,17 @@ uinf uinf::operator % (const uinf &rhs) const {
 }
 
 
-uinf& uinf::operator += (const uinf &rhs) { return *this = *this + rhs; }
-uinf& uinf::operator -= (const uinf &rhs) { return *this = *this - rhs; }
-uinf& uinf::operator *= (const uinf &rhs) { return *this = *this * rhs; }
-uinf& uinf::operator /= (const uinf &rhs) { return *this = *this / rhs; }
-uinf& uinf::operator %= (const uinf &rhs) { return *this = *this % rhs; }
+u99& u99::operator += (const u99 &rhs) { return *this = *this + rhs; }
+u99& u99::operator -= (const u99 &rhs) { return *this = *this - rhs; }
+u99& u99::operator *= (const u99 &rhs) { return *this = *this * rhs; }
+u99& u99::operator /= (const u99 &rhs) { return *this = *this / rhs; }
+u99& u99::operator %= (const u99 &rhs) { return *this = *this % rhs; }
 
 
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i8 uinf::compare(const uinf &rhs) const {
+i8 u99::compare(const u99 &rhs) const {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
 	for (i32 i = len() - 1; i >= 0; --i)
@@ -168,9 +168,9 @@ i8 uinf::compare(const uinf &rhs) const {
 	return 0;
 }
 
-bool uinf::operator == (const uinf &rhs) const { return compare(rhs) == 0;}
-bool uinf::operator != (const uinf &rhs) const { return compare(rhs) != 0; }
-bool uinf::operator < (const uinf &rhs) const { return compare(rhs) < 0; }
-bool uinf::operator > (const uinf &rhs) const { return compare(rhs) > 0; }
-bool uinf::operator <= (const uinf &rhs) const { return compare(rhs) <= 0; }
-bool uinf::operator >= (const uinf &rhs) const { return compare(rhs) >= 0; }
+bool u99::operator == (const u99 &rhs) const { return compare(rhs) == 0;}
+bool u99::operator != (const u99 &rhs) const { return compare(rhs) != 0; }
+bool u99::operator < (const u99 &rhs) const { return compare(rhs) < 0; }
+bool u99::operator > (const u99 &rhs) const { return compare(rhs) > 0; }
+bool u99::operator <= (const u99 &rhs) const { return compare(rhs) <= 0; }
+bool u99::operator >= (const u99 &rhs) const { return compare(rhs) >= 0; }

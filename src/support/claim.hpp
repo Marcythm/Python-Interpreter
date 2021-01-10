@@ -41,14 +41,14 @@ template <typename T> using Vec = std::vector<T>;
 using str = std::string;
 
 
-class uinf;
-class iinf;
+class u99;
+class i99;
 
 namespace innerTypes {
 	class NoneType;
 	template <typename T> class Value;
 
-	using Int = Value<iinf>;
+	using Int = Value<i99>;
 	using Str = Value<str>;
 	using Bool = Value<bool>;
 	using Float = Value<f64>;

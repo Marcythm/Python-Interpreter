@@ -33,13 +33,15 @@ i8 Object::compare(const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
 		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
 	}
-	throw std::invalid_argument("Unsupported type in method compare()");
+	throw std::invalid_argument("unsupported argument type(s) in method compare()");
 }
 
 /* ---------- operator: == ---------- */
 bool Object::operator == (const Object &rhs) const {
 	if (isnone() or rhs.isnone())
 		return isnone() and rhs.isnone();
+	if (is_type<Str>() xor rhs.is_type<Str>())
+		return false;
 	return compare(rhs) == 0;
 }
 
@@ -75,7 +77,7 @@ Object Object::operator - () const {
 	if (auto p = as_type<Int>())					return Object(-p->data());
 	if (auto p = as_type<Bool>())					return Object(p->data() ? -1 : 0);
 	if (auto p = as_type<Float>())					return Object(-p->data());
-	throw std::invalid_argument("Unsupported type in operator -(pre)");
+	throw std::invalid_argument("unsupported operand type(s) in operator -(pre)");
 }
 
 /* ---------- operator: + ---------- */
@@ -95,7 +97,7 @@ Object Object::operator + (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator +");
+	throw std::invalid_argument("unsupported operand type(s) in operator +");
 }
 
 /* ---------- operator: - ---------- */
@@ -113,7 +115,7 @@ Object Object::operator - (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator -");
+	throw std::invalid_argument("unsupported operand type(s) in operator -");
 }
 
 /* ---------- operator: * ---------- */
@@ -136,7 +138,7 @@ Object Object::operator * (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator *");
+	throw std::invalid_argument("unsupported operand type(s) in operator *");
 }
 
 /* ---------- operator: / ---------- */
@@ -154,7 +156,7 @@ Object Object::operator / (const Object &rhs) const {
 		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
 		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator /");
+	throw std::invalid_argument("unsupported operand type(s) in operator /");
 }
 
 /* ---------- method: div ---------- */
@@ -166,7 +168,7 @@ Object Object::div(const Object &rhs) const {
 		if (auto q = rhs.as_type<Int>())			return p->div(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator //");
+	throw std::invalid_argument("unsupported operand type(s) in operator //");
 }
 
 /* ---------- operator: % ---------- */
@@ -178,5 +180,5 @@ Object Object::operator % (const Object &rhs) const {
 		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
 		if (auto q = rhs.as_type<Bool>())			return p->operator%(*q);
 	}
-	throw std::invalid_argument("Unsupported type in operator %");
+	throw std::invalid_argument("unsupported operand type(s) in operator %");
 }

@@ -3,14 +3,14 @@
 #ifndef PYTHON_INTERPRETER_SUPPORT_OBJECT
 #define PYTHON_INTERPRETER_SUPPORT_OBJECT
 
-#include "iinf.hpp"
+#include "i99.hpp"
 
 namespace innerTypes {
 
 	/* ---------- trait: in_typeset ---------- */
 	template <typename T>
 				struct in_typeset 							{	static constexpr bool value = false;	};
-	template <> struct in_typeset<iinf> 					{	static constexpr bool value = true; 	};
+	template <> struct in_typeset<i99> 						{	static constexpr bool value = true; 	};
 	template <> struct in_typeset<str>						{	static constexpr bool value = true; 	};
 	template <> struct in_typeset<bool>						{	static constexpr bool value = true;		};
 	template <> struct in_typeset<f64>						{	static constexpr bool value = true; 	};
@@ -26,7 +26,7 @@ namespace innerTypes {
 	/* ---------- trait: is_integral_type ---------- */
 	template <typename T>
 				struct is_integral_type						{	static constexpr bool value = false;	};
-	template <> struct is_integral_type<iinf>				{	static constexpr bool value = true;		};
+	template <> struct is_integral_type<i99>				{	static constexpr bool value = true;		};
 	template <> struct is_integral_type<bool>				{	static constexpr bool value = true;		};
 	template <typename T> constexpr bool is_integral_type_v = is_integral_type<T>::value;
 
@@ -40,7 +40,7 @@ namespace innerTypes {
 	/* ---------- trait: is_arithmetic_type ---------- */
 	template <typename T>
 				struct is_arithmetic_type					{	static constexpr bool value = false;	};
-	template <> struct is_arithmetic_type<iinf>				{	static constexpr bool value = true;		};
+	template <> struct is_arithmetic_type<i99>				{	static constexpr bool value = true;		};
 	template <> struct is_arithmetic_type<bool>				{	static constexpr bool value = true;		};
 	template <> struct is_arithmetic_type<f64>				{	static constexpr bool value = true;		};
 	template <typename T> constexpr bool is_arithmetic_type_v = is_arithmetic_type<T>::value;
@@ -136,8 +136,8 @@ public:
 
 	~Object();
 
-	// template <typename T>
-	// bool is_type() const { return as_type<T>() != nullptr; }
+	template <typename T>
+	bool is_type() const { return as_type<T>() != nullptr; }
 
 	inline bool isnone() const { return ptr == noneptr; }
 
@@ -196,7 +196,7 @@ namespace innerTypes {
 		if constexpr (std::is_same_v<str, T>)				return str("None");
 		if constexpr (std::is_same_v<bool, T>)				return false;
 		if constexpr (is_storage_v<T>)						return T(as<typename T::value_type>());
-		throw std::invalid_argument(str("Unsupported type in method as(): ") + typeid(T).name());
+		throw std::invalid_argument(str("unsupported argument type(s) in method as(): ") + typeid(T).name());
 	}
 
 
@@ -210,7 +210,7 @@ namespace innerTypes {
 			if constexpr (std::is_same_v<ValueType, U>)		return data();
 			if constexpr (std::is_same_v<Int, T>)			return data().template as<U>();
 
-			if constexpr (std::is_same_v<iinf, U>) {
+			if constexpr (std::is_same_v<i99, U>) {
 				if constexpr (std::is_same_v<Str, T>)		return U(data());
 				if constexpr (std::is_same_v<Bool, T>)		return U(data() ? 1 : 0);
 				if constexpr (std::is_same_v<Float, T>)		return U(i64(data()));
@@ -228,8 +228,8 @@ namespace innerTypes {
 				if constexpr (std::is_same_v<Bool, T>)		return data() ? 1 : 0;
 			}
 		}
-		if constexpr (std::is_integral_v<U>)				return as<iinf>().template as<U>();
-		throw std::invalid_argument(str("Unsupported type in method as(): ") + typeid(U).name());
+		if constexpr (std::is_integral_v<U>)				return as<i99>().template as<U>();
+		throw std::invalid_argument(str("unsupported argument type(s) in method as(): ") + typeid(U).name());
 	}
 
 	/* ---------- method: compare ---------- */
@@ -238,6 +238,8 @@ namespace innerTypes {
 		using T = Value<ValueType>;
 		if constexpr (std::is_same_v<Str, T> and std::is_same_v<Str, U>)
 			return data().compare(rhs.data());
+		if constexpr (std::is_same_v<Str, T> xor std::is_same_v<Str, U>)
+			return 1;
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if (std::is_same_v<Float, T> or std::is_same_v<Float, U>) {
 #if _LIBCPP_STD_VER > 17
@@ -248,9 +250,9 @@ namespace innerTypes {
 				return lv < rv ? -1 : lv > rv ? 1 : 0;
 #endif
 			}
-			return as<iinf>().compare(rhs.template as<iinf>());
+			return as<i99>().compare(rhs.template as<i99>());
 		}
-		throw std::invalid_argument(str("Unsupported type in method compare(): ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported argument type(s) in method compare(): ") + typeid(U).name());
 	}
 
 	/* ---------- operator: -(pre) ---------- */
@@ -261,7 +263,7 @@ namespace innerTypes {
 			return Object(data() ? -1 : 0);
 		if constexpr (is_arithmetic_storage_v<T>)
 			return Object(-data());
-		throw std::invalid_argument(str("Unsupported type in operator -(pre): ") + typeid(T).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator -(pre): ") + typeid(T).name());
 	}
 
 	/* ---------- operator: + ---------- */
@@ -273,9 +275,9 @@ namespace innerTypes {
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
 				return Object(as<f64>() + rhs.template as<f64>());
-			return Object(as<iinf>() + rhs.template as<iinf>());
+			return Object(as<i99>() + rhs.template as<i99>());
 		}
-		throw std::invalid_argument(str("Unsupported type in operator +: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator +: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: - ---------- */
@@ -285,9 +287,9 @@ namespace innerTypes {
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
 				return Object(as<f64>() - rhs.template as<f64>());
-			return Object(as<iinf>() - rhs.template as<iinf>());
+			return Object(as<i99>() - rhs.template as<i99>());
 		}
-		throw std::invalid_argument(str("Unsupported type in operator -: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator -: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: * ---------- */
@@ -297,7 +299,7 @@ namespace innerTypes {
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
 				return Object(as<f64>() * rhs.template as<f64>());
-			return Object(as<iinf>() * rhs.template as<iinf>());
+			return Object(as<i99>() * rhs.template as<i99>());
 		}
 		if constexpr (std::is_same_v<Str, T>) {
 			if constexpr (std::is_same_v<Bool, U>)
@@ -319,7 +321,7 @@ namespace innerTypes {
 				return Object(res);
 			}
 		}
-		throw std::invalid_argument(str("Unsupported type in operator *: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator *: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: / ---------- */
@@ -333,7 +335,7 @@ namespace innerTypes {
 			}
 			return Object(as<f64>() / rhs.template as<f64>());
 		}
-		throw std::invalid_argument(str("Unsupported type in operator /: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator /: ") + typeid(U).name());
 	}
 
 	/* ---------- method: div ---------- */
@@ -342,12 +344,12 @@ namespace innerTypes {
 		using T = Value<ValueType>;
 		if constexpr (is_integral_storage_v<T> and is_integral_storage_v<U>) {
 			if constexpr (std::is_same_v<Bool, U>) {
-				if (rhs.data())	return Object(as<iinf>());
+				if (rhs.data())	return Object(as<i99>());
 				throw std::domain_error("ZeroDivisionError: division by zero");
 			}
-			return Object(as<iinf>() / rhs.template as<iinf>());
+			return Object(as<i99>() / rhs.template as<i99>());
 		}
-		throw std::invalid_argument(str("Unsupported type in operator //: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator //: ") + typeid(U).name());
 	}
 
 	/* ---------- operator: % ---------- */
@@ -359,9 +361,9 @@ namespace innerTypes {
 				if (rhs.data())	return Object(0);
 				throw std::domain_error("ZeroDivisionError: integer division or modulo by zero");
 			}
-			return Object(as<iinf>() % rhs.template as<iinf>());
+			return Object(as<i99>() % rhs.template as<i99>());
 		}
-		throw std::invalid_argument(str("Unsupported type in operator %: ") + typeid(U).name());
+		throw std::invalid_argument(str("unsupported operand type(s) in operator %: ") + typeid(U).name());
 	}
 
 
@@ -384,10 +386,10 @@ Object::Object(_Tp &&rhs) {
 	else if constexpr (innerTypes::is_storage_v<T>)
 		ptr = new T(std::move(rhs));
 	else if constexpr (std::is_integral_v<T>)
-		ptr = new innerTypes::Int(iinf(rhs));
+		ptr = new innerTypes::Int(i99(rhs));
 	else if constexpr (std::is_same_v<T, Object>)
 		ptr = rhs.ptr, rhs.ptr = noneptr;
-	else throw std::invalid_argument(str("Unsupported type in constructor Object(): ") + typeid(rhs).name());
+	else throw std::invalid_argument(str("unsupported argument type(s) in constructor Object(): ") + typeid(rhs).name());
 }
 template <typename _Tp>
 Object::Object(const _Tp &rhs) {
@@ -397,7 +399,7 @@ Object::Object(const _Tp &rhs) {
 	else if constexpr (innerTypes::is_storage_v<T>)
 		ptr = new T(rhs);
 	else if constexpr (std::is_integral_v<T>)
-		ptr = new innerTypes::Int(iinf(rhs));
+		ptr = new innerTypes::Int(i99(rhs));
 	else if constexpr (std::is_same_v<T, Object>) {
 		ptr = noneptr;
 		if (auto p = rhs.template as_type<Int>())				ptr = new Int(*p);
@@ -405,7 +407,7 @@ Object::Object(const _Tp &rhs) {
 		else if (auto p = rhs.template as_type<Bool>()) 		ptr = new Bool(*p);
 		else if (auto p = rhs.template as_type<Float>()) 		ptr = new Float(*p);
 	}
-	else throw std::invalid_argument(str("Unsupported type in constructor Object(): ") + typeid(rhs).name());
+	else throw std::invalid_argument(str("unsupported argument type(s) in constructor Object(): ") + typeid(rhs).name());
 }
 
 

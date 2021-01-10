@@ -205,7 +205,7 @@ Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
 Any EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) {
 	auto raw = ctx->getText();
 	if (ctx->NAME())		return current->varVal(raw);
-	if (ctx->NUMBER())		return (raw.find('.') == str::npos) ? Object(iinf(raw)) : Object(std::stod(raw));
+	if (ctx->NUMBER())		return (raw.find('.') == str::npos) ? Object(i99(raw)) : Object(std::stod(raw));
 	if (not (ctx->STRING().empty())) {
 		str res;
 		for (auto subctx: ctx->STRING()) {

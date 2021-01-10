@@ -4,7 +4,7 @@
 #define PYTHON_INTERPRETER_SUPPORT_FUNCTION
 
 #include "Object.hpp"
-#include "../../generated/Python3BaseVisitor.h"
+#include "../Evalvisitor.h"
 
 
 struct RawFunction {
@@ -21,7 +21,6 @@ struct RawFunction {
 class FunctionCall {
 	static std::unordered_map<str, RawFunction> funcs;
 	std::unordered_map<str, Object> vars;
-	RawFunction* entry_info;
 
 public:
 	Vec<Object> result;
@@ -32,8 +31,9 @@ public:
 
 	Object& varRef(const str &);
 	const Object& varVal(const str &);
+
 	static void newFunction(Python3Parser::FuncdefContext *);
-	static RawFunction& funcRef(const str &);
+	static RawFunction* funcinfo(const str &);
 };
 
 

@@ -12,17 +12,17 @@ generator: generator.cpp
 # main: main.cpp
 # 	clang++ main.cpp ../../src/support/*.cpp -o main -std=c++2a -fsanitize=address -fsanitize=undefined
 
-uinf.o: ../../src/support/uinf.cpp
-	clang++ -c ../../src/support/uinf.cpp -o uinf.o -std=c++2a -mcmodel=medany
-iinf.o: ../../src/support/iinf.cpp
-	clang++ -c ../../src/support/iinf.cpp -o iinf.o -std=c++2a -mcmodel=medany
+u99.o: ../../src/support/u99.cpp
+	clang++ -c ../../src/support/u99.cpp -o u99.o -std=c++2a -mcmodel=medany
+i99.o: ../../src/support/i99.cpp
+	clang++ -c ../../src/support/i99.cpp -o i99.o -std=c++2a -mcmodel=medany
 Object.o: ../../src/support/Object.cpp
 	clang++ -c ../../src/support/Object.cpp -o Object.o -std=c++2a -mcmodel=medany
 main.o: main.cpp
 	clang++ -c main.cpp -o main.o -std=c++2a -mcmodel=medany
 
-main: uinf.o iinf.o Object.o main.o
-	clang++ uinf.o iinf.o Object.o main.o -o main -Wl,-no_pie
+main: u99.o i99.o Object.o main.o
+	clang++ u99.o i99.o Object.o main.o -o main -Wl,-no_pie
 
 
 clean:

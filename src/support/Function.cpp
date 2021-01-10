@@ -1,5 +1,4 @@
 #include "Function.hpp"
-#include "../Evalvisitor.h"
 
 extern EvalVisitor visitor;
 
@@ -24,8 +23,9 @@ FunctionCall* global;
 
 std::unordered_map<str, RawFunction> FunctionCall::funcs;
 
-FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(FunctionCall::funcRef(ctx->atom()->getText()))) {
-	/* initialize */
+FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx) {
+	auto entry_info = funcinfo(ctx->atom()->getText());
+	/* initialize parameters */
 	if (entry_info)
 		for (const auto &p: entry_info->default_args)
 			vars[p.first] = p.second;
@@ -50,10 +50,7 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx): entry_info(&(F
 		result = std::move(res);
 	}
 	current = origin;
-
-	for (const auto &identifier: entry_info->parameters)
-		vars.erase(identifier);
-};
+}
 
 
 Object& FunctionCall::varRef(const str &name) {
@@ -69,9 +66,11 @@ const Object& FunctionCall::varVal(const str &name) {
 }
 
 void FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) {
-	funcs.emplace(ctx->NAME()->getText(), RawFunction(ctx));
+	funcs.emplace(ctx->NAME()->getText(), ctx);
 }
 
-RawFunction& FunctionCall::funcRef(const str &name) {
-	return funcs[name];
+RawFunction* FunctionCall::funcinfo(const str &name) {
+	if (auto p = funcs.find(name); p != funcs.end())
+		return &(p->second);
+	return nullptr;
 }

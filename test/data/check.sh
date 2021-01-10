@@ -18,13 +18,15 @@ datapath=BigIntegerTest
 state=1
 for i in {1..20}; do
 	./$pro < $datapath/$i.in > $tmp/$i.out
-	if [ $? != 0 ]; then
-		echo "	\033[31mProgram exited with code $? on testcase $i\033[0m"
+	t=$?
+	if [ $t != 0 ]; then
+		echo "	\033[31mProgram exited with code $t on testcase $i\033[0m"
 		state=0
 		continue
 	fi
 	diff -w $datapath/$i.out $tmp/$i.out
-	if [ $? != 0 ]; then
+	t=$?
+	if [ $t != 0 ]; then
 		echo "	\033[31mWrong Answer on testcase $i\033[0m"
 		state=0
 		continue
@@ -42,13 +44,15 @@ datapath=Sample
 state=1
 for i in {21..34}; do
 	./$pro < $datapath/$i.in > $tmp/$i.out
-	if [ $? != 0 ]; then
-		echo "	\033[31mProgram exited with code $? on testcase $i\033[0m"
+	t=$?
+	if [ $t != 0 ]; then
+		echo "	\033[31mProgram exited with code $t on testcase $i\033[0m"
 		state=0
 		continue
 	fi
 	diff -w $datapath/$i.out $tmp/$i.out
-	if [ $? != 0 ]; then
+	t=$?
+	if [ $t != 0 ]; then
 		echo "	\033[31mWrong Answer on testcase $i\033[0m"
 		state=0
 		continue
@@ -66,13 +70,15 @@ datapath=AdvancedTest
 state=1
 for i in {35..52}; do
 	./$pro < $datapath/$i.in > $tmp/$i.out
-	if [ $? != 0 ]; then
-		echo "	\033[31mProgram exited with code $? on testcase $i\033[0m"
+	t=$?
+	if [ $t != 0 ]; then
+		echo "	\033[31mProgram exited with code $t on testcase $i\033[0m"
 		state=0
 		continue
 	fi
 	diff -w $datapath/$i.out $tmp/$i.out
-	if [ $? != 0 ]; then
+	t=$?
+	if [ $t != 0 ]; then
 		echo "	\033[31mWrong Answer on testcase $i\033[0m"
 		state=0
 		continue
@@ -90,13 +96,15 @@ datapath=ComplexTest
 state=1
 for i in {53..56}; do
 	./$pro < $datapath/$i.in > $tmp/$i.out
-	if [ $? != 0 ]; then
-		echo "	\033[31mProgram exited with code $? on testcase $i\033[0m"
+	t=$?
+	if [ $t != 0 ]; then
+		echo "	\033[31mProgram exited with code $t on testcase $i\033[0m"
 		state=0
 		continue
 	fi
 	diff -w $datapath/$i.out $tmp/$i.out
-	if [ $? != 0 ]; then
+	t=$?
+	if [ $t != 0 ]; then
 		echo "	\033[31mWrong Answer on testcase $i\033[0m"
 		state=0
 		continue
@@ -114,13 +122,15 @@ datapath=CornerTest
 state=1
 for i in {57..66}; do
 	./$pro < $datapath/$i.in > $tmp/$i.out
-	if [ $? != 0 ]; then
-		echo "	\033[31mProgram exited with code $? on testcase $i\033[0m"
+	t=$?
+	if [ $t != 0 ]; then
+		echo "	\033[31mProgram exited with code $t on testcase $i\033[0m"
 		state=0
 		continue
 	fi
 	diff -w $datapath/$i.out $tmp/$i.out
-	if [ $? != 0 ]; then
+	t=$?
+	if [ $t != 0 ]; then
 		echo "	\033[31mWrong Answer on testcase $i\033[0m"
 		state=0
 		continue

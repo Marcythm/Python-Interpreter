@@ -1,7 +1,7 @@
 #include "Object.hpp"
 
-const innerTypes::NoneType Object::NONE;
-innerTypes::NoneType *const Object::noneptr(const_cast<innerTypes::NoneType*>(&NONE));
+const innerTypes::NoneType Object::None;
+innerTypes::BaseType *const Object::noneptr(const_cast<innerTypes::NoneType*>(&None));
 
 /* ---------- construtors ---------- */
 Object::Object(): ptr(noneptr) {}
@@ -19,27 +19,27 @@ Object::~Object() { if (ptr != noneptr) delete ptr; }
 /* ---------- method: compare ---------- */
 i8 Object::compare(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->compare(*q);
-		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Int>())			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Bool>()) 			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Float>())			return innerTypes::compare(*p, *q);
 	} else if (auto p = as_type<Str>()) {
-		if (auto q = rhs.as_type<Str>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Str>())			return innerTypes::compare(*p, *q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
-		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Int>())			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Bool>())			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Float>())			return innerTypes::compare(*p, *q);
 	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->compare(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->compare(*q);
-		if (auto q = rhs.as_type<Float>())			return p->compare(*q);
+		if (auto q = rhs.as_type<Int>())			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Bool>())			return innerTypes::compare(*p, *q);
+		if (auto q = rhs.as_type<Float>())			return innerTypes::compare(*p, *q);
 	}
 	throw std::invalid_argument("unsupported argument type(s) in method compare()");
 }
 
 /* ---------- operator: == ---------- */
 bool Object::operator == (const Object &rhs) const {
-	if (isnone() or rhs.isnone())
-		return isnone() and rhs.isnone();
+	if (is_type<NoneType>() or rhs.is_type<NoneType>())
+		return is_type<NoneType>() and rhs.is_type<NoneType>();
 	if (is_type<Str>() xor rhs.is_type<Str>())
 		return false;
 	return compare(rhs) == 0;
@@ -65,11 +65,11 @@ Object& Object::operator = (Object &&rhs) {
 
 /* ---------- operator: not ---------- */
 Object Object::operator not () const {
-	if (auto p = as_type<Int>())					return not (p->as<bool>());
-	if (auto p = as_type<Str>())					return not (p->as<bool>());
-	if (auto p = as_type<Bool>())					return not (p->as<bool>());
-	if (auto p = as_type<Float>())					return not (p->as<bool>());
-													return true;
+	if (auto p = as_type<Int>())					return Object(not (p->as<bool>()));
+	if (auto p = as_type<Str>())					return Object(not (p->as<bool>()));
+	if (auto p = as_type<Bool>())					return Object(not (p->as<bool>()));
+	if (auto p = as_type<Float>())					return Object(not (p->as<bool>()));
+													return Object(true);
 }
 
 /* ---------- operator: -(pre) ---------- */
@@ -83,19 +83,19 @@ Object Object::operator - () const {
 /* ---------- operator: + ---------- */
 Object Object::operator + (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->operator+(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) + (*q);
+		if (auto q = rhs.as_type<Bool>()) 			return (*p) + (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) + (*q);
 	} else if (auto p = as_type<Str>()) {
-		if (auto q = rhs.as_type<Str>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Str>())			return (*p) + (*q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) + (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) + (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) + (*q);
 	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator+(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator+(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator+(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) + (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) + (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) + (*q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator +");
 }
@@ -103,17 +103,17 @@ Object Object::operator + (const Object &rhs) const {
 /* ---------- operator: - ---------- */
 Object Object::operator - (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->operator-(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) - (*q);
+		if (auto q = rhs.as_type<Bool>()) 			return (*p) - (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) - (*q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) - (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) - (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) - (*q);
 	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator-(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator-(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator-(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) - (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) - (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) - (*q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator -");
 }
@@ -121,22 +121,22 @@ Object Object::operator - (const Object &rhs) const {
 /* ---------- operator: * ---------- */
 Object Object::operator * (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Str>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->operator*(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Str>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Bool>()) 			return (*p) * (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) * (*q);
 	} else if (auto p = as_type<Str>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) * (*q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Str>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Str>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) * (*q);
 	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator*(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator*(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) * (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) * (*q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator *");
 }
@@ -144,17 +144,17 @@ Object Object::operator * (const Object &rhs) const {
 /* ---------- operator: / ---------- */
 Object Object::operator / (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->operator/(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) / (*q);
+		if (auto q = rhs.as_type<Bool>()) 			return (*p) / (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) / (*q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) / (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) / (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) / (*q);
 	} else if (auto p = as_type<Float>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator/(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator/(*q);
-		if (auto q = rhs.as_type<Float>())			return p->operator/(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) / (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) / (*q);
+		if (auto q = rhs.as_type<Float>())			return (*p) / (*q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator /");
 }
@@ -162,11 +162,11 @@ Object Object::operator / (const Object &rhs) const {
 /* ---------- method: div ---------- */
 Object Object::div(const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->div(*q);
+		if (auto q = rhs.as_type<Int>())			return innerTypes::div(*p, *q);
+		if (auto q = rhs.as_type<Bool>()) 			return innerTypes::div(*p, *q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->div(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->div(*q);
+		if (auto q = rhs.as_type<Int>())			return innerTypes::div(*p, *q);
+		if (auto q = rhs.as_type<Bool>())			return innerTypes::div(*p, *q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator //");
 }
@@ -174,11 +174,11 @@ Object Object::div(const Object &rhs) const {
 /* ---------- operator: % ---------- */
 Object Object::operator % (const Object &rhs) const {
 	if (auto p = as_type<Int>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
-		if (auto q = rhs.as_type<Bool>()) 			return p->operator%(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) % (*q);
+		if (auto q = rhs.as_type<Bool>()) 			return (*p) % (*q);
 	} else if (auto p = as_type<Bool>()) {
-		if (auto q = rhs.as_type<Int>())			return p->operator%(*q);
-		if (auto q = rhs.as_type<Bool>())			return p->operator%(*q);
+		if (auto q = rhs.as_type<Int>())			return (*p) % (*q);
+		if (auto q = rhs.as_type<Bool>())			return (*p) % (*q);
 	}
 	throw std::invalid_argument("unsupported operand type(s) in operator %");
 }

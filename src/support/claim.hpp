@@ -45,9 +45,10 @@ class u99;
 class i99;
 
 namespace innerTypes {
-	class NoneType;
+	class BaseType;
 	template <typename T> class Value;
 
+	using NoneType = Value<void>;
 	using Int = Value<i99>;
 	using Str = Value<str>;
 	using Bool = Value<bool>;

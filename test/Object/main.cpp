@@ -40,7 +40,7 @@ struct Output {
 } out;
 
 str type[] = {"Int  ", "Str  ", "Bool ", "Float"};
-Object var[] = {i99(101), str("qwq"), true, 93.12345678};
+Object var[] = {Object(i99(101)), Object(str("qwq")), Object(true), Object(93.12345678)};
 
 inline str tpof(const Object &rhs) {
 	if (rhs.as_type<innerTypes::Int>())		return "Int";

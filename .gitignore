@@ -9,6 +9,6 @@
 /**/*.java
 /**/*.o
 
-/test/data
+# /test/data
 /**/main
 /test/hack.py

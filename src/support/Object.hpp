@@ -67,6 +67,9 @@ namespace innerTypes {
 	class Value: public BaseType {
 	public:
 		using value_type = ValueType;
+		using reference = value_type&;
+		using const_reference = const value_type&;
+
 	private:
 		value_type value;
 
@@ -81,8 +84,8 @@ namespace innerTypes {
 		/* destructor */
 		~Value() = default;
 
-		value_type& ref() { return value; }
-		const value_type& data() const { return value; }
+		reference ref() { return value; }
+		const_reference data() const { return value; }
 
 		template <typename T> T as() const;
 

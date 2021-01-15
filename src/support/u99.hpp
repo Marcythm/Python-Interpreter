@@ -3,7 +3,7 @@
 #ifndef PYTHON_INTERPRETER_SUPPORT_UINF
 #define PYTHON_INTERPRETER_SUPPORT_UINF
 
-#include "claim.hpp"
+#include "config.hpp"
 
 class u99 {
 	/* lower bit in lower index

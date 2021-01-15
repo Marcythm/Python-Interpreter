@@ -3,6 +3,7 @@
 #ifndef PYTHON_INTERPRETER_SUPPORT_FUNCTION
 #define PYTHON_INTERPRETER_SUPPORT_FUNCTION
 
+#include "config.hpp"
 #include "Object.hpp"
 #include "../Evalvisitor.h"
 

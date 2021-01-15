@@ -3,7 +3,7 @@
 
 
 #include "../generated/Python3BaseVisitor.h"
-#include "support/claim.hpp"
+#include "support/config.hpp"
 #include "support/Object.hpp"
 #include "support/Function.hpp"
 

@@ -3,52 +3,54 @@
 #ifndef PYTHON_INTERPRETER_SUPPORT_OBJECT
 #define PYTHON_INTERPRETER_SUPPORT_OBJECT
 
+#include "config.hpp"
+#include "u99.hpp"
 #include "i99.hpp"
 
 namespace innerTypes {
 
 	/* ---------- trait: in_typeset ---------- */
 	template <typename T>
-				struct in_typeset 							{	static constexpr bool value = false;	};
-	template <> struct in_typeset<void> 					{	static constexpr bool value = true; 	};
-	template <> struct in_typeset<i99> 						{	static constexpr bool value = true; 	};
-	template <> struct in_typeset<str>						{	static constexpr bool value = true; 	};
-	template <> struct in_typeset<bool>						{	static constexpr bool value = true;		};
-	template <> struct in_typeset<f64>						{	static constexpr bool value = true; 	};
+				struct in_typeset							: std::false_type {};
+	template <> struct in_typeset<void>						: std::true_type {};
+	template <> struct in_typeset<i99>						: std::true_type {};
+	template <> struct in_typeset<str>						: std::true_type {};
+	template <> struct in_typeset<bool>						: std::true_type {};
+	template <> struct in_typeset<f64>						: std::true_type {};
 	template <typename T> constexpr bool in_typeset_v = in_typeset<T>::value;
 
 	/* ---------- trait: is_storage ---------- */
 	template <typename T>
-				struct is_storage 							{	static constexpr bool value = false;	};
+				struct is_storage							: std::false_type {};
 	template <typename T>
-				struct is_storage<Value<T>> 				{	static constexpr bool value = in_typeset_v<T>; 	};
+				struct is_storage<Value<T>>					{	static constexpr bool value = in_typeset_v<T>;	};
 	template <typename T> constexpr bool is_storage_v = is_storage<T>::value;
 
 	/* ---------- trait: is_integral_type ---------- */
 	template <typename T>
-				struct is_integral_type						{	static constexpr bool value = false;	};
-	template <> struct is_integral_type<i99>				{	static constexpr bool value = true;		};
-	template <> struct is_integral_type<bool>				{	static constexpr bool value = true;		};
+				struct is_integral_type						: std::false_type {};
+	template <> struct is_integral_type<i99>				: std::true_type {};
+	template <> struct is_integral_type<bool>				: std::true_type {};
 	template <typename T> constexpr bool is_integral_type_v = is_integral_type<T>::value;
 
 	/* ---------- trait: is_integral_storage ---------- */
 	template <typename T>
-				struct is_integral_storage					{	static constexpr bool value = false;	};
+				struct is_integral_storage					: std::false_type {};
 	template <typename T>
 				struct is_integral_storage<Value<T>>		{	static constexpr bool value = is_integral_type_v<T>;	};
 	template <typename T> constexpr bool is_integral_storage_v = is_integral_storage<T>::value;
 
 	/* ---------- trait: is_arithmetic_type ---------- */
 	template <typename T>
-				struct is_arithmetic_type					{	static constexpr bool value = false;	};
-	template <> struct is_arithmetic_type<i99>				{	static constexpr bool value = true;		};
-	template <> struct is_arithmetic_type<bool>				{	static constexpr bool value = true;		};
-	template <> struct is_arithmetic_type<f64>				{	static constexpr bool value = true;		};
+				struct is_arithmetic_type					: std::false_type {};
+	template <> struct is_arithmetic_type<i99>				: std::true_type {};
+	template <> struct is_arithmetic_type<bool>				: std::true_type {};
+	template <> struct is_arithmetic_type<f64>				: std::true_type {};
 	template <typename T> constexpr bool is_arithmetic_type_v = is_arithmetic_type<T>::value;
 
 	/* ---------- trait: is_arithmetic_storage ---------- */
 	template <typename T>
-				struct is_arithmetic_storage				{	static constexpr bool value = false;	};
+				struct is_arithmetic_storage				: std::false_type {};
 	template <typename T>
 				struct is_arithmetic_storage<Value<T>>		{	static constexpr bool value = is_arithmetic_type_v<T>;	};
 	template <typename T> constexpr bool is_arithmetic_storage_v = is_arithmetic_storage<T>::value;
@@ -410,9 +412,9 @@ Object::Object(const _Tp &rhs) {
 		ptr = new innerTypes::Int(i99(rhs));
 	else if constexpr (std::is_same_v<T, Object>) {
 		if (auto p = rhs.template as_type<Int>())				ptr = new Int(*p);
-		else if (auto p = rhs.template as_type<Str>()) 			ptr = new Str(*p);
-		else if (auto p = rhs.template as_type<Bool>()) 		ptr = new Bool(*p);
-		else if (auto p = rhs.template as_type<Float>()) 		ptr = new Float(*p);
+		else if (auto p = rhs.template as_type<Str>())			ptr = new Str(*p);
+		else if (auto p = rhs.template as_type<Bool>())			ptr = new Bool(*p);
+		else if (auto p = rhs.template as_type<Float>())		ptr = new Float(*p);
 		else													ptr = noneptr;
 	}
 	else throw std::invalid_argument(str("unsupported argument type(s) in constructor Object(): ") + typeid(rhs).name());
@@ -422,9 +424,9 @@ Object::Object(const _Tp &rhs) {
 /* ---------- method: as ---------- */
 template <typename T> T Object::as() const {
 	if (auto p = as_type<Int>())					return p->as<T>();
-	if (auto p = as_type<Str>()) 					return p->as<T>();
-	if (auto p = as_type<Bool>()) 					return p->as<T>();
-	if (auto p = as_type<Float>()) 					return p->as<T>();
+	if (auto p = as_type<Str>())					return p->as<T>();
+	if (auto p = as_type<Bool>())					return p->as<T>();
+	if (auto p = as_type<Float>())					return p->as<T>();
 	if (auto p = as_type<NoneType>())				return p->as<T>();
 	throw std::invalid_argument(str("conversion from unknown type to ") + typeid(T).name());
 }

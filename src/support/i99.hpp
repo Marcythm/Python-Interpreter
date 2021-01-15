@@ -3,6 +3,7 @@
 #ifndef PYTHON_INTERPRETER_SUPPORT_IINF
 #define PYTHON_INTERPRETER_SUPPORT_IINF
 
+#include "config.hpp"
 #include "u99.hpp"
 
 class i99 {

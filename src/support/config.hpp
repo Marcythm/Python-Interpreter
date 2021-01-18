@@ -1,7 +1,5 @@
 #pragma once
-
-#ifndef PYTHON_INTERPRETER_SUPPORT_PRECLAIM
-#define PYTHON_INTERPRETER_SUPPORT_PRECLAIM
+_Pragma("once")
 
 #include <vector>
 #include <string>
@@ -17,6 +15,7 @@
 #include <type_traits>
 // #include <compare>
 
+#include <cstdint>
 #include <cassert>
 #include <cstring>
 
@@ -63,5 +62,3 @@ namespace FlowControl {
 	class BREAK {};
 	class CONTINUE {};
 }
-
-#endif

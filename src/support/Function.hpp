@@ -1,7 +1,5 @@
 #pragma once
-
-#ifndef PYTHON_INTERPRETER_SUPPORT_FUNCTION
-#define PYTHON_INTERPRETER_SUPPORT_FUNCTION
+_Pragma("once")
 
 #include "config.hpp"
 #include "Object.hpp"
@@ -36,6 +34,3 @@ public:
 	static void newFunction(Python3Parser::FuncdefContext *);
 	static RawFunction* funcinfo(const str &);
 };
-
-
-#endif

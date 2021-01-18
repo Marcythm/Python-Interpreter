@@ -1,7 +1,5 @@
 #pragma once
-
-#ifndef PYTHON_INTERPRETER_SUPPORT_OBJECT
-#define PYTHON_INTERPRETER_SUPPORT_OBJECT
+_Pragma("once")
 
 #include "config.hpp"
 #include "u99.hpp"
@@ -430,5 +428,3 @@ template <typename T> T Object::as() const {
 	if (auto p = as_type<NoneType>())				return p->as<T>();
 	throw std::invalid_argument(str("conversion from unknown type to ") + typeid(T).name());
 }
-
-#endif

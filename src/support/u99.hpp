@@ -1,7 +1,5 @@
 #pragma once
-
-#ifndef PYTHON_INTERPRETER_SUPPORT_UINF
-#define PYTHON_INTERPRETER_SUPPORT_UINF
+_Pragma("once")
 
 #include "config.hpp"
 
@@ -83,5 +81,3 @@ template <typename T> T u99::as() const {
 	throw std::bad_cast();
 	return T();
 }
-
-#endif

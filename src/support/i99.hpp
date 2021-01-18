@@ -1,7 +1,5 @@
 #pragma once
-
-#ifndef PYTHON_INTERPRETER_SUPPORT_IINF
-#define PYTHON_INTERPRETER_SUPPORT_IINF
+_Pragma("once")
 
 #include "config.hpp"
 #include "u99.hpp"
@@ -66,5 +64,3 @@ public:
 	bool operator <= (const i99 &rhs) const;
 	bool operator >= (const i99 &rhs) const;
 };
-
-#endif

@@ -3,29 +3,29 @@
 
 /* ---------- private functions ---------- */
 
-void i99::detect_sign() { if (value.iszero()) sign = ZERO; }
+auto i99::detect_sign() -> void { if (value.iszero()) sign = ZERO; }
 
 /* ---------- public functions ----------  */
 
-u32 i99::len() const { return value.len(); }
-bool i99::isnegative() const { return sign == NEG; }
-bool i99::iszero() const { return sign == ZERO; }
-bool i99::ispositive() const { return sign == POS; }
+auto i99::len()			const -> u32  { return value.len(); }
+auto i99::isnegative()	const -> bool { return sign == NEG; }
+auto i99::iszero()		const -> bool { return sign == ZERO; }
+auto i99::ispositive()	const -> bool { return sign == POS; }
 
 template <>
-bool i99::as<bool>() const { return sign != 0; }
+auto i99::as<bool>() const -> bool { return sign != 0; }
 
 template <>
-str i99::as<str>() const { return (isnegative() ? "-" : "") + value.as<str>(); }
+auto i99::as<str>() const -> str { return (isnegative() ? "-" : "") + value.as<str>(); }
 
 template <>
-i32 i99::as<i32>() const { return sign * static_cast<i32>(value.as<u32>()); }
+auto i99::as<i32>() const -> i32 { return sign * static_cast<i32>(value.as<u32>()); }
 
 template <>
-i64 i99::as<i64>() const { return sign * static_cast<i64>(value.as<u64>()); }
+auto i99::as<i64>() const -> i64 { return sign * static_cast<i64>(value.as<u64>()); }
 
 template <>
-f64 i99::as<f64>() const { return sign * value.as<f64>(); }
+auto i99::as<f64>() const -> f64 { return sign * value.as<f64>(); }
 
 /* ---------- constructors and assignment operators ---------- */
 
@@ -51,13 +51,13 @@ i99& i99::operator = (i99 &&rhs) noexcept {
 	return *this;
 }
 
-i32& i99::operator [] (const u32 index) { return value[index]; }
-const i32& i99::operator [] (const u32 index) const { return value[index]; }
+auto i99::operator [] (const u32 index) -> i32& { return value[index]; }
+auto i99::operator [] (const u32 index) const -> const i32& { return value[index]; }
 
 
 /* ---------- arithmetic operators ---------- */
 
-i99 i99::operator + (const i99 &rhs) const {
+auto i99::operator + (const i99 &rhs) const -> i99 {
 	if (sign == rhs.sign) return i99(value + rhs.value, sign);
 	if (iszero()) return rhs; if (rhs.iszero()) return *this;
 	if (ispositive())
@@ -65,7 +65,7 @@ i99 i99::operator + (const i99 &rhs) const {
 	return (rhs.value >= value) ? i99(rhs.value - value, POS) : i99(value - rhs.value, NEG);
 }
 
-i99 i99::operator - (const i99 &rhs) const {
+auto i99::operator - (const i99 &rhs) const -> i99 {
 	if (sign * rhs.sign < 0) return i99(value + rhs.value, sign);
 	if (iszero()) return -rhs; if (rhs.iszero()) return *this;
 	if (ispositive())
@@ -73,9 +73,9 @@ i99 i99::operator - (const i99 &rhs) const {
 	return (rhs.value >= value) ? i99(rhs.value - value, POS) : i99(value - rhs.value, NEG);
 }
 
-i99 i99::operator * (const i99 &rhs) const { return i99(value * rhs.value, sign * rhs.sign); }
+auto i99::operator * (const i99 &rhs) const -> i99 { return i99(value * rhs.value, sign * rhs.sign); }
 
-i99 i99::operator / (const i99 &rhs) const {
+auto i99::operator / (const i99 &rhs) const -> i99 {
 	if (rhs.iszero()) throw std::domain_error("in i99::operator / : Divide By Zero");
 	if (iszero()) return i99();
 	if (sign == rhs.sign) return i99(value / rhs.value, POS);
@@ -84,29 +84,29 @@ i99 i99::operator / (const i99 &rhs) const {
 }
 
 /* a lazy implementation */
-i99 i99::operator % (const i99 &rhs) const { return *this - rhs * (*this / rhs); }
+auto i99::operator % (const i99 &rhs) const -> i99 { return *this - rhs * (*this / rhs); }
 
-i99 i99::operator - () const { return i99(value, -sign); }
+auto i99::operator - () const -> i99 { return i99(value, -sign); }
 
 
-i99& i99::operator += (const i99 &rhs) { return *this = *this + rhs; }
-i99& i99::operator -= (const i99 &rhs) { return *this = *this - rhs; }
-i99& i99::operator *= (const i99 &rhs) { return *this = *this * rhs; }
-i99& i99::operator /= (const i99 &rhs) { return *this = *this / rhs; }
-i99& i99::operator %= (const i99 &rhs) { return *this = *this % rhs; }
+auto i99::operator += (const i99 &rhs) -> i99& { return *this = *this + rhs; }
+auto i99::operator -= (const i99 &rhs) -> i99& { return *this = *this - rhs; }
+auto i99::operator *= (const i99 &rhs) -> i99& { return *this = *this * rhs; }
+auto i99::operator /= (const i99 &rhs) -> i99& { return *this = *this / rhs; }
+auto i99::operator %= (const i99 &rhs) -> i99& { return *this = *this % rhs; }
 
 
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i8 i99::compare(const i99 &rhs) const {
+auto i99::compare(const i99 &rhs) const -> i8 {
 	if (sign != rhs.sign) return sign < rhs.sign ? -1 : 1;
 	return (isnegative() ? -1 : 1) * value.compare(rhs.value);
 }
 
-bool i99::operator == (const i99 &rhs) const { return compare(rhs) == 0;}
-bool i99::operator != (const i99 &rhs) const { return compare(rhs) != 0; }
-bool i99::operator < (const i99 &rhs) const { return compare(rhs) < 0; }
-bool i99::operator > (const i99 &rhs) const { return compare(rhs) > 0; }
-bool i99::operator <= (const i99 &rhs) const { return compare(rhs) <= 0; }
-bool i99::operator >= (const i99 &rhs) const { return compare(rhs) >= 0; }
+auto i99::operator == (const i99 &rhs) const -> bool { return compare(rhs) == 0;}
+auto i99::operator != (const i99 &rhs) const -> bool { return compare(rhs) != 0; }
+auto i99::operator < (const i99 &rhs) const -> bool { return compare(rhs) < 0; }
+auto i99::operator > (const i99 &rhs) const -> bool { return compare(rhs) > 0; }
+auto i99::operator <= (const i99 &rhs) const -> bool { return compare(rhs) <= 0; }
+auto i99::operator >= (const i99 &rhs) const -> bool { return compare(rhs) >= 0; }

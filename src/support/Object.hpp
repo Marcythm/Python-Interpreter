@@ -84,30 +84,30 @@ namespace innerTypes {
 		/* destructor */
 		~Value() = default;
 
-		reference ref() { return value; }
-		const_reference data() const { return value; }
+		auto ref() -> reference { return value; }
+		auto data() const -> const_reference { return value; }
 
-		template <typename T> T as() const;
+		template <typename T> auto as() const -> T;
 
-		Value& operator = (Value &&rhs) { value = std::move(rhs.value); }
-		Value& operator = (const Value &rhs) = default;
+		auto operator = (Value &&rhs) -> Value& { value = std::move(rhs.value); }
+		auto operator = (const Value &rhs) -> Value& = default;
 
 		/* comparison operators */
-		template <typename T, typename U> friend i8	compare(const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator == (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator != (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator <  (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator >  (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator <= (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator >= (const Value<T> &, const Value<U> &);
+		template <typename T, typename U> friend auto compare(const Value<T> &, const Value<U> &) -> i8;
+		template <typename T, typename U> friend auto operator == (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator != (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator <  (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator >  (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator <= (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator >= (const Value<T> &, const Value<U> &) -> bool;
 
-		Object operator - () const;
-		template <typename T, typename U> friend Object operator + (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend Object operator - (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend Object operator * (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend Object operator / (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend Object div        (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend Object operator % (const Value<T> &, const Value<U> &);
+		auto operator - () const -> Object;
+		template <typename T, typename U> friend auto operator + (const Value<T> &, const Value<U> &) -> Object;
+		template <typename T, typename U> friend auto operator - (const Value<T> &, const Value<U> &) -> Object;
+		template <typename T, typename U> friend auto operator * (const Value<T> &, const Value<U> &) -> Object;
+		template <typename T, typename U> friend auto operator / (const Value<T> &, const Value<U> &) -> Object;
+		template <typename T, typename U> friend auto div        (const Value<T> &, const Value<U> &) -> Object;
+		template <typename T, typename U> friend auto operator % (const Value<T> &, const Value<U> &) -> Object;
 	};
 
 	template <> class Value<void>: public BaseType {
@@ -115,11 +115,11 @@ namespace innerTypes {
 		Value() = default;
 		~Value() = default;
 
-		template <typename T> T as() const;
+		template <typename T> auto as() const -> T;
 
 		/* comparison operators */
-		template <typename T, typename U> friend bool operator == (const Value<T> &, const Value<U> &);
-		template <typename T, typename U> friend bool operator != (const Value<T> &, const Value<U> &);
+		template <typename T, typename U> friend auto operator == (const Value<T> &, const Value<U> &) -> bool;
+		template <typename T, typename U> friend auto operator != (const Value<T> &, const Value<U> &) -> bool;
 	};
 
 	/*
@@ -150,42 +150,42 @@ public:
 	~Object();
 
 	template <typename T>
-	bool is_type() const { return as_type<T>() != nullptr; }
+	auto is_type() const -> bool { return as_type<T>() != nullptr; }
 
 	template <typename T>
-	T* as_type() const { return dynamic_cast<T*>(ptr); }
+	auto as_type() const -> T* { return dynamic_cast<T*>(ptr); }
 
-	template <typename T> T as() const;
+	template <typename T> auto as() const -> T;
 
 	/* comparison operators */
-	i8 compare(const Object &) const;
-	bool operator == (const Object &rhs) const;
-	bool operator != (const Object &rhs) const { return not operator==(rhs); };
-	bool operator <  (const Object &rhs) const { return compare(rhs) <  0; };
-	bool operator >  (const Object &rhs) const { return compare(rhs) >  0; };
-	bool operator <= (const Object &rhs) const { return compare(rhs) <= 0; };
-	bool operator >= (const Object &rhs) const { return compare(rhs) >= 0; };
+	auto compare(const Object &) const -> i8;
+	auto operator == (const Object &rhs) const -> bool;
+	auto operator != (const Object &rhs) const -> bool { return not operator==(rhs); };
+	auto operator <  (const Object &rhs) const -> bool { return compare(rhs) <  0; };
+	auto operator >  (const Object &rhs) const -> bool { return compare(rhs) >  0; };
+	auto operator <= (const Object &rhs) const -> bool { return compare(rhs) <= 0; };
+	auto operator >= (const Object &rhs) const -> bool { return compare(rhs) >= 0; };
 
 	/* assignment operators */
-	Object& operator = (const Object &);
-	Object& operator = (Object &&);
+	auto operator = (const Object &) -> Object&;
+	auto operator = (Object &&) -> Object&;
 
-	Object operator not () const;
-	Object operator - () const;
+	auto operator not () const -> Object;
+	auto operator - () const -> Object;
 
-	Object operator +	(const Object &) const;
-	Object operator -	(const Object &) const;
-	Object operator *	(const Object &) const;
-	Object operator /	(const Object &) const;
-	Object div			(const Object &) const;
-	Object operator %	(const Object &) const;
+	auto operator +	(const Object &) const -> Object;
+	auto operator -	(const Object &) const -> Object;
+	auto operator *	(const Object &) const -> Object;
+	auto operator /	(const Object &) const -> Object;
+	auto div		(const Object &) const -> Object;
+	auto operator %	(const Object &) const -> Object;
 
-	Object& operator +=	(const Object &rhs) { return *this = *this + rhs; };
-	Object& operator -=	(const Object &rhs) { return *this = *this - rhs; };
-	Object& operator *=	(const Object &rhs) { return *this = *this * rhs; };
-	Object& operator /=	(const Object &rhs) { return *this = *this / rhs; };
-	Object& diveq		(const Object &rhs) { return *this = this->div(rhs); };
-	Object& operator %=	(const Object &rhs) { return *this = *this % rhs; };
+	auto operator +=(const Object &rhs) -> Object& { return *this = *this + rhs; };
+	auto operator -=(const Object &rhs) -> Object& { return *this = *this - rhs; };
+	auto operator *=(const Object &rhs) -> Object& { return *this = *this * rhs; };
+	auto operator /=(const Object &rhs) -> Object& { return *this = *this / rhs; };
+	auto diveq		(const Object &rhs) -> Object& { return *this = this->div(rhs); };
+	auto operator %=(const Object &rhs) -> Object& { return *this = *this % rhs; };
 
 };
 
@@ -197,7 +197,7 @@ namespace innerTypes {
 
 
 	/* ---------- method: as ---------- */
-	template <typename T> T NoneType::as() const {
+	template <typename T> auto NoneType::as() const -> T {
 		if constexpr (std::is_same_v<str, T>)				return str("None");
 		if constexpr (std::is_same_v<bool, T>)				return false;
 		if constexpr (is_storage_v<T>)						return T(as<typename T::value_type>());
@@ -207,7 +207,7 @@ namespace innerTypes {
 
 	/* ---------- method: as ---------- */
 	template <typename ValueType> template <typename U>
-	U Value<ValueType>::as() const {
+	auto Value<ValueType>::as() const -> U {
 		using T = Value<ValueType>;
 		if constexpr (std::is_same_v<T, U>)					return *this;
 		if constexpr (is_storage_v<U>)						return U(as<typename U::value_type>());
@@ -239,7 +239,7 @@ namespace innerTypes {
 
 	/* ---------- method: compare ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	i8 compare(const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto compare(const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> i8 {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (std::is_same_v<Str, T> and std::is_same_v<Str, U>)
 			return lhs.data().compare(rhs.data());
@@ -255,7 +255,7 @@ namespace innerTypes {
 
 	/* ---------- operator: == ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	bool operator == (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator == (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> bool {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (std::is_same_v<NoneType, T> or std::is_same_v<NoneType, U>)
 			return std::is_same_v<NoneType, T> and std::is_same_v<NoneType, U>;
@@ -265,15 +265,15 @@ namespace innerTypes {
 	}
 
 
-	template <typename T, typename U> bool operator != (const Value<T> &lhs, const Value<U> &rhs) { return not (lhs == rhs); };
-	template <typename T, typename U> bool operator <  (const Value<T> &lhs, const Value<U> &rhs) { return compare(lhs, rhs) <  0; };
-	template <typename T, typename U> bool operator >  (const Value<T> &lhs, const Value<U> &rhs) { return compare(lhs, rhs) >  0; };
-	template <typename T, typename U> bool operator <= (const Value<T> &lhs, const Value<U> &rhs) { return compare(lhs, rhs) <= 0; };
-	template <typename T, typename U> bool operator >= (const Value<T> &lhs, const Value<U> &rhs) { return compare(lhs, rhs) >= 0; };
+	template <typename T, typename U> auto operator != (const Value<T> &lhs, const Value<U> &rhs) -> bool { return not (lhs == rhs); };
+	template <typename T, typename U> auto operator <  (const Value<T> &lhs, const Value<U> &rhs) -> bool { return compare(lhs, rhs) <  0; };
+	template <typename T, typename U> auto operator >  (const Value<T> &lhs, const Value<U> &rhs) -> bool { return compare(lhs, rhs) >  0; };
+	template <typename T, typename U> auto operator <= (const Value<T> &lhs, const Value<U> &rhs) -> bool { return compare(lhs, rhs) <= 0; };
+	template <typename T, typename U> auto operator >= (const Value<T> &lhs, const Value<U> &rhs) -> bool { return compare(lhs, rhs) >= 0; };
 
 	/* ---------- operator: -(pre) ---------- */
 	template <typename ValueType>
-	Object Value<ValueType>::operator - () const {
+	auto Value<ValueType>::operator - () const -> Object {
 		using T = Value<ValueType>;
 		if constexpr (std::is_same_v<Bool, T>)
 			return Object(data() ? -1 : 0);
@@ -284,7 +284,7 @@ namespace innerTypes {
 
 	/* ---------- operator: + ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object operator + (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator + (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (std::is_same_v<Str, T> and std::is_same_v<Str, U>)
 			return Object(lhs.data() + rhs.data());
@@ -298,7 +298,7 @@ namespace innerTypes {
 
 	/* ---------- operator: - ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object operator - (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator - (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
@@ -310,7 +310,7 @@ namespace innerTypes {
 
 	/* ---------- operator: * ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object operator * (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator * (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (std::is_same_v<Float, T> or std::is_same_v<Float, U>)
@@ -333,7 +333,7 @@ namespace innerTypes {
 
 	/* ---------- operator: / ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object operator / (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator / (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (is_arithmetic_storage_v<T> and is_arithmetic_storage_v<U>) {
 			if constexpr (is_integral_storage_v<U>) {
@@ -347,7 +347,7 @@ namespace innerTypes {
 
 	/* ---------- method: div ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object div(const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto div(const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (is_integral_storage_v<T> and is_integral_storage_v<U>) {
 			if constexpr (std::is_same_v<Bool, U>) {
@@ -361,7 +361,7 @@ namespace innerTypes {
 
 	/* ---------- operator: % ---------- */
 	template <typename ValueTypeT, typename ValueTypeU>
-	Object operator % (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) {
+	auto operator % (const Value<ValueTypeT> &lhs, const Value<ValueTypeU> &rhs) -> Object {
 		using T = Value<ValueTypeT>; using U = Value<ValueTypeU>;
 		if constexpr (is_integral_storage_v<T> and is_integral_storage_v<U>) {
 			if constexpr (std::is_same_v<Bool, U>) {
@@ -420,7 +420,7 @@ Object::Object(const _Tp &rhs) {
 
 
 /* ---------- method: as ---------- */
-template <typename T> T Object::as() const {
+template <typename T> auto Object::as() const -> T {
 	if (auto p = as_type<Int>())					return p->as<T>();
 	if (auto p = as_type<Str>())					return p->as<T>();
 	if (auto p = as_type<Bool>())					return p->as<T>();

@@ -12,47 +12,47 @@ class EvalVisitor: public Python3BaseVisitor {
 //todo:override all methods of Python3BaseVisitor
 public:
 
-	virtual antlrcpp::Any visitFile_input(Python3Parser::File_inputContext *ctx);
+	virtual auto visitFile_input(Python3Parser::File_inputContext *ctx) 		-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitFuncdef(Python3Parser::FuncdefContext *ctx);
-	virtual antlrcpp::Any visitParameters(Python3Parser::ParametersContext *ctx);
-	virtual antlrcpp::Any visitTypedargslist(Python3Parser::TypedargslistContext *ctx);
-	virtual antlrcpp::Any visitTfpdef(Python3Parser::TfpdefContext *ctx);
+	virtual auto visitFuncdef(Python3Parser::FuncdefContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitParameters(Python3Parser::ParametersContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitTypedargslist(Python3Parser::TypedargslistContext *ctx)	-> antlrcpp::Any;
+	virtual auto visitTfpdef(Python3Parser::TfpdefContext *ctx) 				-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitStmt(Python3Parser::StmtContext *ctx);
-	virtual antlrcpp::Any visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx);
-	virtual antlrcpp::Any visitSmall_stmt(Python3Parser::Small_stmtContext *ctx);
-	virtual antlrcpp::Any visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx);
-	virtual antlrcpp::Any visitAugassign(Python3Parser::AugassignContext *ctx);
+	virtual auto visitStmt(Python3Parser::StmtContext *ctx) 					-> antlrcpp::Any;
+	virtual auto visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitSmall_stmt(Python3Parser::Small_stmtContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitAugassign(Python3Parser::AugassignContext *ctx) 			-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx);
-	virtual antlrcpp::Any visitBreak_stmt(Python3Parser::Break_stmtContext *ctx);
-	virtual antlrcpp::Any visitContinue_stmt(Python3Parser::Continue_stmtContext *ctx);
-	virtual antlrcpp::Any visitReturn_stmt(Python3Parser::Return_stmtContext *ctx);
-	virtual antlrcpp::Any visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx);
-	virtual antlrcpp::Any visitIf_stmt(Python3Parser::If_stmtContext *ctx);
-	virtual antlrcpp::Any visitWhile_stmt(Python3Parser::While_stmtContext *ctx);
+	virtual auto visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitBreak_stmt(Python3Parser::Break_stmtContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitContinue_stmt(Python3Parser::Continue_stmtContext *ctx)	-> antlrcpp::Any;
+	virtual auto visitReturn_stmt(Python3Parser::Return_stmtContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx)	-> antlrcpp::Any;
+	virtual auto visitIf_stmt(Python3Parser::If_stmtContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitWhile_stmt(Python3Parser::While_stmtContext *ctx) 		-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitSuite(Python3Parser::SuiteContext *ctx);
+	virtual auto visitSuite(Python3Parser::SuiteContext *ctx) 					-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitTest(Python3Parser::TestContext *ctx);
-	virtual antlrcpp::Any visitOr_test(Python3Parser::Or_testContext *ctx);
-	virtual antlrcpp::Any visitAnd_test(Python3Parser::And_testContext *ctx);
-	virtual antlrcpp::Any visitNot_test(Python3Parser::Not_testContext *ctx);
-	virtual antlrcpp::Any visitComparison(Python3Parser::ComparisonContext *ctx);
-	virtual antlrcpp::Any visitComp_op(Python3Parser::Comp_opContext *ctx);
-	virtual antlrcpp::Any visitArith_expr(Python3Parser::Arith_exprContext *ctx);
-	virtual antlrcpp::Any visitAddorsub_op(Python3Parser::Addorsub_opContext *ctx);
-	virtual antlrcpp::Any visitTerm(Python3Parser::TermContext *ctx);
-	virtual antlrcpp::Any visitMuldivmod_op(Python3Parser::Muldivmod_opContext *ctx);
-	virtual antlrcpp::Any visitFactor(Python3Parser::FactorContext *ctx);
-	virtual antlrcpp::Any visitAtom_expr(Python3Parser::Atom_exprContext *ctx);
-	virtual antlrcpp::Any visitTrailer(Python3Parser::TrailerContext *ctx);
-	virtual antlrcpp::Any visitAtom(Python3Parser::AtomContext *ctx);
+	virtual auto visitTest(Python3Parser::TestContext *ctx) 					-> antlrcpp::Any;
+	virtual auto visitOr_test(Python3Parser::Or_testContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitAnd_test(Python3Parser::And_testContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitNot_test(Python3Parser::Not_testContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitComparison(Python3Parser::ComparisonContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitComp_op(Python3Parser::Comp_opContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitArith_expr(Python3Parser::Arith_exprContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitAddorsub_op(Python3Parser::Addorsub_opContext *ctx) 		-> antlrcpp::Any;
+	virtual auto visitTerm(Python3Parser::TermContext *ctx) 					-> antlrcpp::Any;
+	virtual auto visitMuldivmod_op(Python3Parser::Muldivmod_opContext *ctx) 	-> antlrcpp::Any;
+	virtual auto visitFactor(Python3Parser::FactorContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitAtom_expr(Python3Parser::Atom_exprContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitTrailer(Python3Parser::TrailerContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitAtom(Python3Parser::AtomContext *ctx) 					-> antlrcpp::Any;
 
-	virtual antlrcpp::Any visitTestlist(Python3Parser::TestlistContext *ctx);
-	virtual antlrcpp::Any visitArglist(Python3Parser::ArglistContext *ctx);
-	virtual antlrcpp::Any visitArgument(Python3Parser::ArgumentContext *ctx);
+	virtual auto visitTestlist(Python3Parser::TestlistContext *ctx) 			-> antlrcpp::Any;
+	virtual auto visitArglist(Python3Parser::ArglistContext *ctx) 				-> antlrcpp::Any;
+	virtual auto visitArgument(Python3Parser::ArgumentContext *ctx) 			-> antlrcpp::Any;
 
 	EvalVisitor();
 	~EvalVisitor();

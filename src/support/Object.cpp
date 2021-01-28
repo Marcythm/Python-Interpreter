@@ -17,7 +17,7 @@ Object::Object(const Object &rhs): ptr(noneptr) {
 Object::~Object() { if (ptr != noneptr) delete ptr; }
 
 /* ---------- method: compare ---------- */
-i8 Object::compare(const Object &rhs) const {
+auto Object::compare(const Object &rhs) const -> i8 {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return innerTypes::compare(*p, *q);
 		if (auto q = rhs.as_type<Bool>()) 			return innerTypes::compare(*p, *q);
@@ -37,7 +37,7 @@ i8 Object::compare(const Object &rhs) const {
 }
 
 /* ---------- operator: == ---------- */
-bool Object::operator == (const Object &rhs) const {
+auto Object::operator == (const Object &rhs) const -> bool {
 	if (is_type<NoneType>() or rhs.is_type<NoneType>())
 		return is_type<NoneType>() and rhs.is_type<NoneType>();
 	if (is_type<Str>() xor rhs.is_type<Str>())
@@ -47,7 +47,7 @@ bool Object::operator == (const Object &rhs) const {
 
 /* ---------- operator: = ---------- */
 
-Object& Object::operator = (const Object &rhs) {
+auto Object::operator = (const Object &rhs) -> Object& {
 	if (this == &rhs) return *this;
 	this->~Object();
 	if (auto p = rhs.as_type<Int>())				ptr = new Int(*p);
@@ -57,14 +57,14 @@ Object& Object::operator = (const Object &rhs) {
 	else 											ptr = noneptr;
 	return *this;
 }
-Object& Object::operator = (Object &&rhs) {
+auto Object::operator = (Object &&rhs) -> Object& {
 	this->~Object();
 	ptr = rhs.ptr; rhs.ptr = noneptr;
 	return *this;
 }
 
 /* ---------- operator: not ---------- */
-Object Object::operator not () const {
+auto Object::operator not () const -> Object {
 	if (auto p = as_type<Int>())					return Object(not (p->as<bool>()));
 	if (auto p = as_type<Str>())					return Object(not (p->as<bool>()));
 	if (auto p = as_type<Bool>())					return Object(not (p->as<bool>()));
@@ -73,7 +73,7 @@ Object Object::operator not () const {
 }
 
 /* ---------- operator: -(pre) ---------- */
-Object Object::operator - () const {
+auto Object::operator - () const -> Object {
 	if (auto p = as_type<Int>())					return Object(-p->data());
 	if (auto p = as_type<Bool>())					return Object(p->data() ? -1 : 0);
 	if (auto p = as_type<Float>())					return Object(-p->data());
@@ -81,7 +81,7 @@ Object Object::operator - () const {
 }
 
 /* ---------- operator: + ---------- */
-Object Object::operator + (const Object &rhs) const {
+auto Object::operator + (const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return (*p) + (*q);
 		if (auto q = rhs.as_type<Bool>()) 			return (*p) + (*q);
@@ -101,7 +101,7 @@ Object Object::operator + (const Object &rhs) const {
 }
 
 /* ---------- operator: - ---------- */
-Object Object::operator - (const Object &rhs) const {
+auto Object::operator - (const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return (*p) - (*q);
 		if (auto q = rhs.as_type<Bool>()) 			return (*p) - (*q);
@@ -119,7 +119,7 @@ Object Object::operator - (const Object &rhs) const {
 }
 
 /* ---------- operator: * ---------- */
-Object Object::operator * (const Object &rhs) const {
+auto Object::operator * (const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return (*p) * (*q);
 		if (auto q = rhs.as_type<Str>())			return (*p) * (*q);
@@ -142,7 +142,7 @@ Object Object::operator * (const Object &rhs) const {
 }
 
 /* ---------- operator: / ---------- */
-Object Object::operator / (const Object &rhs) const {
+auto Object::operator / (const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return (*p) / (*q);
 		if (auto q = rhs.as_type<Bool>()) 			return (*p) / (*q);
@@ -160,7 +160,7 @@ Object Object::operator / (const Object &rhs) const {
 }
 
 /* ---------- method: div ---------- */
-Object Object::div(const Object &rhs) const {
+auto Object::div(const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return innerTypes::div(*p, *q);
 		if (auto q = rhs.as_type<Bool>()) 			return innerTypes::div(*p, *q);
@@ -172,7 +172,7 @@ Object Object::div(const Object &rhs) const {
 }
 
 /* ---------- operator: % ---------- */
-Object Object::operator % (const Object &rhs) const {
+auto Object::operator % (const Object &rhs) const -> Object {
 	if (auto p = as_type<Int>()) {
 		if (auto q = rhs.as_type<Int>())			return (*p) % (*q);
 		if (auto q = rhs.as_type<Bool>()) 			return (*p) % (*q);

@@ -2,34 +2,34 @@
 
 using antlrcpp::Any;
 
-Any EvalVisitor::visitParameters(Python3Parser::ParametersContext *ctx)			{ return visitChildren(ctx); }
-Any EvalVisitor::visitTypedargslist(Python3Parser::TypedargslistContext *ctx)	{ return visitChildren(ctx); }
-Any EvalVisitor::visitTfpdef(Python3Parser::TfpdefContext *ctx)					{ return visitChildren(ctx); }
-Any EvalVisitor::visitAugassign(Python3Parser::AugassignContext *ctx)			{ return visitChildren(ctx); }
-Any EvalVisitor::visitComp_op(Python3Parser::Comp_opContext *ctx)				{ return visitChildren(ctx); }
-Any EvalVisitor::visitAddorsub_op(Python3Parser::Addorsub_opContext *ctx)		{ return visitChildren(ctx); }
-Any EvalVisitor::visitMuldivmod_op(Python3Parser::Muldivmod_opContext *ctx)		{ return visitChildren(ctx); }
-Any EvalVisitor::visitTrailer(Python3Parser::TrailerContext *ctx)				{ return visitChildren(ctx); }
-Any EvalVisitor::visitArglist(Python3Parser::ArglistContext *ctx)				{ return visitChildren(ctx); }
-Any EvalVisitor::visitArgument(Python3Parser::ArgumentContext *ctx)				{ return visitChildren(ctx); }
+auto EvalVisitor::visitParameters(Python3Parser::ParametersContext *ctx)		-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitTypedargslist(Python3Parser::TypedargslistContext *ctx)	-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitTfpdef(Python3Parser::TfpdefContext *ctx)				-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitAugassign(Python3Parser::AugassignContext *ctx)			-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitComp_op(Python3Parser::Comp_opContext *ctx)				-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitAddorsub_op(Python3Parser::Addorsub_opContext *ctx)		-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitMuldivmod_op(Python3Parser::Muldivmod_opContext *ctx)	-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitTrailer(Python3Parser::TrailerContext *ctx)				-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitArglist(Python3Parser::ArglistContext *ctx)				-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitArgument(Python3Parser::ArgumentContext *ctx)			-> Any { return visitChildren(ctx); }
 
-Any EvalVisitor::visitFile_input(Python3Parser::File_inputContext *ctx)			{ return visitChildren(ctx); }
-Any EvalVisitor::visitStmt(Python3Parser::StmtContext *ctx)						{ return visitChildren(ctx); }
-Any EvalVisitor::visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx)		{ return visitChildren(ctx); }
-Any EvalVisitor::visitSmall_stmt(Python3Parser::Small_stmtContext *ctx)			{ return visitChildren(ctx); }
-Any EvalVisitor::visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx)			{ return visitChildren(ctx); }
-Any EvalVisitor::visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx)	{ return visitChildren(ctx); }
+auto EvalVisitor::visitFile_input(Python3Parser::File_inputContext *ctx)		-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitStmt(Python3Parser::StmtContext *ctx)					-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitSimple_stmt(Python3Parser::Simple_stmtContext *ctx)		-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitSmall_stmt(Python3Parser::Small_stmtContext *ctx)		-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitFlow_stmt(Python3Parser::Flow_stmtContext *ctx)			-> Any { return visitChildren(ctx); }
+auto EvalVisitor::visitCompound_stmt(Python3Parser::Compound_stmtContext *ctx)	-> Any { return visitChildren(ctx); }
 
 
 extern FunctionCall* current;
 extern FunctionCall* global;
 
-Any EvalVisitor::visitFuncdef(Python3Parser::FuncdefContext *ctx) {
+auto EvalVisitor::visitFuncdef(Python3Parser::FuncdefContext *ctx) -> Any {
 	FunctionCall::newFunction(ctx);
 	return Object();
 }
 
-Any EvalVisitor::visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) {
+auto EvalVisitor::visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) -> Any {
 	if (ctx->augassign()) {
 		const auto lhs = ctx->testlist(0)->test(); auto lit = lhs.begin();
 		const auto rhs = ctx->testlist(1)->test(); auto rit = rhs.begin();
@@ -54,24 +54,24 @@ Any EvalVisitor::visitExpr_stmt(Python3Parser::Expr_stmtContext *ctx) {
 	return Object();
 }
 
-Any EvalVisitor::visitBreak_stmt(Python3Parser::Break_stmtContext *ctx) {
+auto EvalVisitor::visitBreak_stmt(Python3Parser::Break_stmtContext *ctx) -> Any {
 	throw FlowControl::BREAK();
 	return Object();
 }
 
-Any EvalVisitor::visitContinue_stmt(Python3Parser::Continue_stmtContext *ctx) {
+auto EvalVisitor::visitContinue_stmt(Python3Parser::Continue_stmtContext *ctx) -> Any {
 	throw FlowControl::CONTINUE();
 	return Object();
 }
 
-Any EvalVisitor::visitReturn_stmt(Python3Parser::Return_stmtContext *ctx) {
+auto EvalVisitor::visitReturn_stmt(Python3Parser::Return_stmtContext *ctx) -> Any {
 	if (ctx->testlist())
 		throw visitTestlist(ctx->testlist()).as<Vec<Object>>();
 	throw Vec<Object>(1, Object());
 	return Object();
 }
 
-Any EvalVisitor::visitIf_stmt(Python3Parser::If_stmtContext *ctx) {
+auto EvalVisitor::visitIf_stmt(Python3Parser::If_stmtContext *ctx) -> Any {
 	const auto conds = ctx->test();
 	const auto suites = ctx->suite();
 	for (i32 i = 0; i < i32(conds.size()); ++i)
@@ -81,7 +81,7 @@ Any EvalVisitor::visitIf_stmt(Python3Parser::If_stmtContext *ctx) {
 	return Object();
 }
 
-Any EvalVisitor::visitWhile_stmt(Python3Parser::While_stmtContext *ctx) {
+auto EvalVisitor::visitWhile_stmt(Python3Parser::While_stmtContext *ctx) -> Any {
 	for (; visitTest(ctx->test()).as<Object>().as<bool>(); )
 		try {
 			visitSuite(ctx->suite());
@@ -90,11 +90,11 @@ Any EvalVisitor::visitWhile_stmt(Python3Parser::While_stmtContext *ctx) {
 	return Object();
 }
 
-Any EvalVisitor::visitSuite(Python3Parser::SuiteContext *ctx) { return visitChildren(ctx); }
+auto EvalVisitor::visitSuite(Python3Parser::SuiteContext *ctx) -> Any { return visitChildren(ctx); }
 
-Any EvalVisitor::visitTest(Python3Parser::TestContext *ctx) { return visitOr_test(ctx->or_test()); }
+auto EvalVisitor::visitTest(Python3Parser::TestContext *ctx) -> Any { return visitOr_test(ctx->or_test()); }
 
-Any EvalVisitor::visitOr_test(Python3Parser::Or_testContext *ctx) {
+auto EvalVisitor::visitOr_test(Python3Parser::Or_testContext *ctx) -> Any {
 	if (ctx->OR().empty())
 		return visitAnd_test(ctx->and_test(0));
 	for (auto subctx: ctx->and_test())
@@ -103,7 +103,7 @@ Any EvalVisitor::visitOr_test(Python3Parser::Or_testContext *ctx) {
 	return Object(false);
 }
 
-Any EvalVisitor::visitAnd_test(Python3Parser::And_testContext *ctx) {
+auto EvalVisitor::visitAnd_test(Python3Parser::And_testContext *ctx) -> Any {
 	if (ctx->AND().empty())
 		return visitNot_test(ctx->not_test(0));
 	for (auto subctx: ctx->not_test())
@@ -112,13 +112,13 @@ Any EvalVisitor::visitAnd_test(Python3Parser::And_testContext *ctx) {
 	return Object(true);
 }
 
-Any EvalVisitor::visitNot_test(Python3Parser::Not_testContext *ctx) {
+auto EvalVisitor::visitNot_test(Python3Parser::Not_testContext *ctx) -> Any {
 	if (ctx->NOT())
 		return not visitNot_test(ctx->not_test()).as<Object>();
 	return visitComparison(ctx->comparison());
 }
 
-Any EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) {
+auto EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) -> Any {
 	if (ctx->comp_op().empty())
 		return visitArith_expr(ctx->arith_expr(0));
 
@@ -139,7 +139,7 @@ Any EvalVisitor::visitComparison(Python3Parser::ComparisonContext *ctx) {
 	return Object(true);
 }
 
-Any EvalVisitor::visitArith_expr(Python3Parser::Arith_exprContext *ctx) {
+auto EvalVisitor::visitArith_expr(Python3Parser::Arith_exprContext *ctx) -> Any {
 	if (ctx->addorsub_op().empty())
 		return visitTerm(ctx->term(0));
 	Object value = std::move(visitTerm(ctx->term(0)).as<Object>());
@@ -152,7 +152,7 @@ Any EvalVisitor::visitArith_expr(Python3Parser::Arith_exprContext *ctx) {
 	return value;
 }
 
-Any EvalVisitor::visitTerm(Python3Parser::TermContext *ctx) {
+auto EvalVisitor::visitTerm(Python3Parser::TermContext *ctx) -> Any {
 	if (ctx->muldivmod_op().empty())
 		return visitFactor(ctx->factor(0));
 	Object value = std::move(visitFactor(ctx->factor(0)).as<Object>());
@@ -169,7 +169,7 @@ Any EvalVisitor::visitTerm(Python3Parser::TermContext *ctx) {
 	return value;
 }
 
-Any EvalVisitor::visitFactor(Python3Parser::FactorContext *ctx) {
+auto EvalVisitor::visitFactor(Python3Parser::FactorContext *ctx) -> Any {
 	if (ctx->factor()) {
 		if (ctx->MINUS())
 			return -visitFactor(ctx->factor()).as<Object>();
@@ -177,7 +177,7 @@ Any EvalVisitor::visitFactor(Python3Parser::FactorContext *ctx) {
 	} return visitAtom_expr(ctx->atom_expr());
 }
 
-Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
+auto EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) -> Any {
 	if (ctx->trailer()) {
 		const auto name = ctx->atom()->getText();
 		if (name == "print") {
@@ -202,7 +202,7 @@ Any EvalVisitor::visitAtom_expr(Python3Parser::Atom_exprContext *ctx) {
 	return visitAtom(ctx->atom());
 }
 
-Any EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) {
+auto EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) -> Any {
 	auto raw = ctx->getText();
 	if (ctx->NAME())		return current->varVal(raw);
 	if (ctx->NUMBER())		return (raw.find('.') == str::npos) ? Object(i99(raw)) : Object(std::stod(raw));
@@ -220,7 +220,7 @@ Any EvalVisitor::visitAtom(Python3Parser::AtomContext *ctx) {
 	return visitTest(ctx->test());
 }
 
-Any EvalVisitor::visitTestlist(Python3Parser::TestlistContext *ctx) {
+auto EvalVisitor::visitTestlist(Python3Parser::TestlistContext *ctx) -> Any {
 	const auto tests = ctx->test();
 	Vec<Object> res;
 	for (auto subctx: tests) {

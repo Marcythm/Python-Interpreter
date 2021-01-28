@@ -28,9 +28,9 @@ public:
 	FunctionCall(Python3Parser::Atom_exprContext *);
 	~FunctionCall() = default;
 
-	Object& varRef(const str &);
-	const Object& varVal(const str &);
+	auto varRef(const str &) -> Object&;
+	auto varVal(const str &) -> const Object&;
 
-	static void newFunction(Python3Parser::FuncdefContext *);
-	static RawFunction* funcinfo(const str &);
+	static auto newFunction(Python3Parser::FuncdefContext *) -> void;
+	static auto funcinfo(const str &) -> RawFunction*;
 };

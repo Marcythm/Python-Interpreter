@@ -3,8 +3,8 @@
 
 /* ---------- private functions ---------- */
 
-void u99::resize(u32 new_length) { value.resize(new_length); }
-void u99::remove_leading_zero() {
+auto u99::resize(u32 new_length) -> void { value.resize(new_length); }
+auto u99::remove_leading_zero() -> void {
 	while (not value.empty() and value.back() == 0) value.pop_back();
 }
 
@@ -12,8 +12,8 @@ void u99::remove_leading_zero() {
 
 /* ---------- public functions ----------  */
 
-u32 u99::len() const { return value.size(); }
-bool u99::iszero() const { return value.size() == 0; }
+auto u99::len() const -> u32 { return value.size(); }
+auto u99::iszero() const -> bool { return value.size() == 0; }
 
 /* ---------- constructors and assignment operators ---------- */
 
@@ -62,19 +62,19 @@ u99::u99(Vec<i32> &&rhs): value(std::move(rhs)) { remove_leading_zero(); }
 u99::u99(const u99 &rhs) = default;
 u99::u99(u99 &&rhs) noexcept { value = std::move(rhs.value); }
 
-u99& u99::operator = (const u99 &rhs) = default;
-u99& u99::operator = (u99 &&rhs) noexcept {
+auto u99::operator = (const u99 &rhs) -> u99& = default;
+auto u99::operator = (u99 &&rhs) noexcept -> u99& {
 	value = std::move(rhs.value);
 	return *this;
 }
 
-i32& u99::operator [] (const u32 index) { return value[index]; }
-const i32& u99::operator [] (const u32 index) const { return value[index]; }
+auto u99::operator [] (const u32 index) -> i32& { return value[index]; }
+auto u99::operator [] (const u32 index) const -> const i32& { return value[index]; }
 
 
 /* ---------- arithmetic operators ---------- */
 
-u99 u99::operator + (const u99 &rhs) const {
+auto u99::operator + (const u99 &rhs) const -> u99 {
 	if (len() > rhs.len()) return rhs + *this;
 	/* assume that len() <= rhs.len(); */
 	u99 ans(rhs); ans.resize(ans.len() + 1);
@@ -88,7 +88,7 @@ u99 u99::operator + (const u99 &rhs) const {
 	return ans;
 }
 
-u99 u99::operator - (const u99 &rhs) const {
+auto u99::operator - (const u99 &rhs) const -> u99 {
 	assert(*this >= rhs);
 	/* assume that the result is non-negative */
 	u99 ans(*this);
@@ -102,7 +102,7 @@ u99 u99::operator - (const u99 &rhs) const {
 	return ans;
 }
 
-u99 u99::operator * (const u99 &rhs) const {
+auto u99::operator * (const u99 &rhs) const -> u99 {
 	u99 ans; ans.resize(len() + rhs.len() + 1);
 	for (u32 i = 0; i < len(); ++i)
 		for (u32 j = 0; j < rhs.len(); ++j)
@@ -116,7 +116,7 @@ u99 u99::operator * (const u99 &rhs) const {
 	return ans;
 }
 
-u99 u99::operator / (const u99 &rhs) const {
+auto u99::operator / (const u99 &rhs) const -> u99 {
 	if (rhs.iszero()) throw std::domain_error("in u99::operator / : Divide By Zero");
 
 	u99 rem; Vec<i32> ans;
@@ -134,7 +134,7 @@ u99 u99::operator / (const u99 &rhs) const {
 	return u99(ans);
 }
 
-u99 u99::operator % (const u99 &rhs) const {
+auto u99::operator % (const u99 &rhs) const -> u99 {
 	if (rhs.iszero()) throw std::domain_error("in u99::operator % : Modulo By Zero");
 
 	u99 rem;
@@ -149,17 +149,17 @@ u99 u99::operator % (const u99 &rhs) const {
 }
 
 
-u99& u99::operator += (const u99 &rhs) { return *this = *this + rhs; }
-u99& u99::operator -= (const u99 &rhs) { return *this = *this - rhs; }
-u99& u99::operator *= (const u99 &rhs) { return *this = *this * rhs; }
-u99& u99::operator /= (const u99 &rhs) { return *this = *this / rhs; }
-u99& u99::operator %= (const u99 &rhs) { return *this = *this % rhs; }
+auto u99::operator += (const u99 &rhs) -> u99& { return *this = *this + rhs; }
+auto u99::operator -= (const u99 &rhs) -> u99& { return *this = *this - rhs; }
+auto u99::operator *= (const u99 &rhs) -> u99& { return *this = *this * rhs; }
+auto u99::operator /= (const u99 &rhs) -> u99& { return *this = *this / rhs; }
+auto u99::operator %= (const u99 &rhs) -> u99& { return *this = *this % rhs; }
 
 
 /* ---------- comparison operators ---------- */
 
 /* usage: equal to three-way comparison operator <=> */
-i8 u99::compare(const u99 &rhs) const {
+auto u99::compare(const u99 &rhs) const -> i8 {
 	if (len() > rhs.len()) return 1;
 	if (len() < rhs.len()) return -1;
 	for (i32 i = len() - 1; i >= 0; --i)
@@ -168,9 +168,9 @@ i8 u99::compare(const u99 &rhs) const {
 	return 0;
 }
 
-bool u99::operator == (const u99 &rhs) const { return compare(rhs) == 0;}
-bool u99::operator != (const u99 &rhs) const { return compare(rhs) != 0; }
-bool u99::operator < (const u99 &rhs) const { return compare(rhs) < 0; }
-bool u99::operator > (const u99 &rhs) const { return compare(rhs) > 0; }
-bool u99::operator <= (const u99 &rhs) const { return compare(rhs) <= 0; }
-bool u99::operator >= (const u99 &rhs) const { return compare(rhs) >= 0; }
+auto u99::operator == (const u99 &rhs) const -> bool { return compare(rhs) == 0;}
+auto u99::operator != (const u99 &rhs) const -> bool { return compare(rhs) != 0; }
+auto u99::operator < (const u99 &rhs) const -> bool { return compare(rhs) < 0; }
+auto u99::operator > (const u99 &rhs) const -> bool { return compare(rhs) > 0; }
+auto u99::operator <= (const u99 &rhs) const -> bool { return compare(rhs) <= 0; }
+auto u99::operator >= (const u99 &rhs) const -> bool { return compare(rhs) >= 0; }

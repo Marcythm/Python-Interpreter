@@ -9,13 +9,13 @@ class u99 {
 	 * */
 	Vec<i32> value;
 
-	void resize(u32 new_length);
-	void remove_leading_zero();
+	auto resize(u32 new_length) -> void;
+	auto remove_leading_zero() -> void;
 
 public:
-	u32 len() const;
-	bool iszero() const;
-	template <typename T> T as() const;
+	auto len() const -> u32;
+	auto iszero() const -> bool;
+	template <typename T> auto as() const -> T;
 
 	u99();
 	// template <typename T> u99(T val);
@@ -31,36 +31,36 @@ public:
 	u99(const u99 &rhs);
 	u99(u99 &&rhs) noexcept;
 
-	u99& operator = (const u99 &rhs);
-	u99& operator = (u99 &&rhs) noexcept;
+	auto operator = (const u99 &rhs) -> u99&;
+	auto operator = (u99 &&rhs) noexcept -> u99&;
 
-	i32& operator [] (const u32 index);
-	const i32& operator [] (const u32 index) const;
+	auto operator [] (const u32 index) -> i32& ;
+	auto operator [] (const u32 index) const -> const i32& ;
 
-	u99 operator + (const u99 &rhs) const;
-	u99 operator - (const u99 &rhs) const;
-	u99 operator * (const u99 &rhs) const;
-	u99 operator / (const u99 &rhs) const;
-	u99 operator % (const u99 &rhs) const;
+	auto operator + (const u99 &rhs) const -> u99;
+	auto operator - (const u99 &rhs) const -> u99;
+	auto operator * (const u99 &rhs) const -> u99;
+	auto operator / (const u99 &rhs) const -> u99;
+	auto operator % (const u99 &rhs) const -> u99;
 
-	u99& operator += (const u99 &rhs);
-	u99& operator -= (const u99 &rhs);
-	u99& operator *= (const u99 &rhs);
-	u99& operator /= (const u99 &rhs);
-	u99& operator %= (const u99 &rhs);
+	auto operator += (const u99 &rhs) -> u99&;
+	auto operator -= (const u99 &rhs) -> u99&;
+	auto operator *= (const u99 &rhs) -> u99&;
+	auto operator /= (const u99 &rhs) -> u99&;
+	auto operator %= (const u99 &rhs) -> u99&;
 
-	i8 compare(const u99 &rhs) const; /* usage: equal to three-way comparison operator <=> */
-	bool operator == (const u99 &rhs) const;
-	bool operator != (const u99 &rhs) const;
-	bool operator < (const u99 &rhs) const;
-	bool operator > (const u99 &rhs) const;
-	bool operator <= (const u99 &rhs) const;
-	bool operator >= (const u99 &rhs) const;
+	auto compare(const u99 &rhs) const -> i8; /* usage: equal to three-way comparison operator <=> */
+	auto operator == (const u99 &rhs) const -> bool;
+	auto operator != (const u99 &rhs) const -> bool;
+	auto operator < (const u99 &rhs) const -> bool;
+	auto operator > (const u99 &rhs) const -> bool;
+	auto operator <= (const u99 &rhs) const -> bool;
+	auto operator >= (const u99 &rhs) const -> bool;
 
 	friend class i99;
 };
 
-template <typename T> T u99::as() const {
+template <typename T> auto u99::as() const -> T {
 	if constexpr (std::is_same_v<T, bool>)
 		return value.size() == 0;
 	if constexpr (std::is_same_v<T, str>) {

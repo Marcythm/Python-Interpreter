@@ -53,7 +53,7 @@ FunctionCall::FunctionCall(Python3Parser::Atom_exprContext *ctx) {
 }
 
 
-Object& FunctionCall::varRef(const str &name) {
+auto FunctionCall::varRef(const str &name) -> Object& {
 	if (auto p = vars.find(name); p != vars.end())
 		return p->second;
 	if (auto p = global->vars.find(name); p != global->vars.end())
@@ -61,15 +61,15 @@ Object& FunctionCall::varRef(const str &name) {
 	return vars[name];
 }
 
-const Object& FunctionCall::varVal(const str &name) {
+auto FunctionCall::varVal(const str &name) -> const Object& {
 	return varRef(name);
 }
 
-void FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) {
+auto FunctionCall::newFunction(Python3Parser::FuncdefContext *ctx) -> void {
 	funcs.emplace(ctx->NAME()->getText(), ctx);
 }
 
-RawFunction* FunctionCall::funcinfo(const str &name) {
+auto FunctionCall::funcinfo(const str &name) -> RawFunction* {
 	if (auto p = funcs.find(name); p != funcs.end())
 		return &(p->second);
 	return nullptr;

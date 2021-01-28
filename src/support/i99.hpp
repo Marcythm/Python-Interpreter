@@ -12,15 +12,15 @@ static constexpr i8 POS = 1;
 	i8 sign;
 	u99 value;
 
-	void detect_sign();
+	auto detect_sign() -> void;
 
 public:
-	u32 len() const;
-	template <typename T> T as() const;
+	auto len() const -> u32;
+	template <typename T> auto as() const -> T;
 
-	bool isnegative() const;
-	bool iszero() const;
-	bool ispositive() const;
+	auto isnegative() const -> bool;
+	auto iszero() const -> bool;
+	auto ispositive() const -> bool;
 
 	i99();
 	// template <typename T> i99(T val);
@@ -36,31 +36,31 @@ public:
 	i99(const i99 &rhs);
 	i99(i99 &&rhs) noexcept;
 
-	i99& operator = (const i99 &rhs);
-	i99& operator = (i99 &&rhs) noexcept;
+	auto operator = (const i99 &rhs) -> i99&;
+	auto operator = (i99 &&rhs) noexcept -> i99&;
 
-	i32& operator [] (const u32 index);
-	const i32& operator [] (const u32 index) const;
+	auto operator [] (const u32 index) -> i32&;
+	auto operator [] (const u32 index) const -> const i32&;
 
-	i99 operator + (const i99 &rhs) const;
-	i99 operator - (const i99 &rhs) const;
-	i99 operator * (const i99 &rhs) const;
-	i99 operator / (const i99 &rhs) const;
-	i99 operator % (const i99 &rhs) const;
+	auto operator + (const i99 &rhs) const -> i99;
+	auto operator - (const i99 &rhs) const -> i99;
+	auto operator * (const i99 &rhs) const -> i99;
+	auto operator / (const i99 &rhs) const -> i99;
+	auto operator % (const i99 &rhs) const -> i99;
 
-	i99 operator - () const;
+	auto operator - () const -> i99;
 
-	i99& operator += (const i99 &rhs);
-	i99& operator -= (const i99 &rhs);
-	i99& operator *= (const i99 &rhs);
-	i99& operator /= (const i99 &rhs);
-	i99& operator %= (const i99 &rhs);
+	auto operator += (const i99 &rhs) -> i99&;
+	auto operator -= (const i99 &rhs) -> i99&;
+	auto operator *= (const i99 &rhs) -> i99&;
+	auto operator /= (const i99 &rhs) -> i99&;
+	auto operator %= (const i99 &rhs) -> i99&;
 
-	i8 compare(const i99 &rhs) const; /* usage: equal to three-way comparison operator <=> */
-	bool operator == (const i99 &rhs) const;
-	bool operator != (const i99 &rhs) const;
-	bool operator < (const i99 &rhs) const;
-	bool operator > (const i99 &rhs) const;
-	bool operator <= (const i99 &rhs) const;
-	bool operator >= (const i99 &rhs) const;
+	auto compare(const i99 &rhs) const -> i8; /* usage: equal to three-way comparison operator <=> */
+	auto operator == (const i99 &rhs) const -> bool;
+	auto operator != (const i99 &rhs) const -> bool;
+	auto operator < (const i99 &rhs) const -> bool;
+	auto operator > (const i99 &rhs) const -> bool;
+	auto operator <= (const i99 &rhs) const -> bool;
+	auto operator >= (const i99 &rhs) const -> bool;
 };

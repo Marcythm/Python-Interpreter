@@ -7,7 +7,7 @@ using namespace antlr4;
 //todo: regenerating files in directory named "generated" is dangerous.
 //       if you really need to regenerate,please ask TA for help.
 EvalVisitor visitor;
-int main(int argc, const char* argv[]){
+auto main(int argc, const char* argv[]) -> i32 {
     //todo:please don't modify the code below the construction of ifs if you want to use visitor mode
     ANTLRInputStream input(std::cin);
     Python3Lexer lexer(&input);

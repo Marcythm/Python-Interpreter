@@ -31,7 +31,7 @@ for i in {1..20}; do
 		state=0
 		continue
 	fi
-	echo "	\033[32mtestcase $i Accepted"
+	echo "	\033[32mtestcase $i Accepted\033[0m"
 done
 if [ $state = 1 ]; then
 	echo "\033[1m\033[32mSubtask 1 Accepted!\033[0m"
@@ -57,7 +57,7 @@ for i in {21..34}; do
 		state=0
 		continue
 	fi
-	echo "	\033[32mtestcase $i Accepted"
+	echo "	\033[32mtestcase $i Accepted\033[0m"
 done
 if [ $state = 1 ]; then
 	echo "\033[1m\033[32mSubtask 2 Accepted!\033[0m"
@@ -83,7 +83,7 @@ for i in {35..52}; do
 		state=0
 		continue
 	fi
-	echo "	\033[32mtestcase $i Accepted"
+	echo "	\033[32mtestcase $i Accepted\033[0m"
 done
 if [ $state = 1 ]; then
 	echo "\033[1m\033[32mSubtask 3 Accepted!\033[0m"
@@ -109,7 +109,7 @@ for i in {53..56}; do
 		state=0
 		continue
 	fi
-	echo "	\033[32mtestcase $i Accepted"
+	echo "	\033[32mtestcase $i Accepted\033[0m"
 done
 if [ $state = 1 ]; then
 	echo "\033[1m\033[32mSubtask 4 Accepted!\033[0m"
@@ -135,7 +135,7 @@ for i in {57..66}; do
 		state=0
 		continue
 	fi
-	echo "	\033[32mtestcase $i Accepted"
+	echo "	\033[32mtestcase $i Accepted\033[0m"
 done
 if [ $state = 1 ]; then
 	echo "\033[1m\033[32mSubtask 5 Accepted!\033[0m"
